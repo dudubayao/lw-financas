@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valores dos Serviços | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para a página de valores dos serviços */
+        .valores-container {
+            margin: 20px 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .pricing-table th, 
+        .pricing-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .pricing-table th {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .pricing-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .service-name {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .service-description {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        
+        .price {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .price-reseller {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        .edit-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background-color: #fff8e1;
+            color: #f57c00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .edit-btn:hover {
+            background-color: #ffecb3;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(22, 71, 133, 0.2);
+        }
+        
+        .form-group-full {
+            grid-column: span 2;
+        }
+        
+        .form-actions {
+            grid-column: span 2;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group-full, 
+            .form-actions {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pedidos de Revendedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listas.html">
+                        <i class="fas fa-list-alt"></i>
+                        <span>Listas</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="valores.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Valores dos Serviços</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Valores dos Serviços</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Administrador</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Valores Container -->
+        <div class="valores-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Tabela de Valores para Serviços</h2>
+                    <button class="btn btn-primary" id="atualizar-tabela-btn">
+                        <i class="fas fa-save"></i> Atualizar Valores
+                    </button>
+                </div>
+                <div class="card-body">
+                    <p style="margin-bottom: 20px;">Configure os valores para cada serviço oferecido. Os valores para revendedores devem ser menores que os valores para clientes finais.</p>
+                    
+                    <table class="pricing-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%">Serviço</th>
+                                <th style="width: 20%">Valor para Cliente Final</th>
+                                <th style="width: 20%">Valor para Revendedor</th>
+                                <th style="width: 15%">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="service-name">Consulta Completa</div>
+                                    <div class="service-description">Checagem completa em todos os órgãos de proteção ao crédito</div>
+                                </td>
+                                <td class="price">R$ 350,00</td>
+                                <td class="price-reseller">R$ 280,00</td>
+                                <td>
+                                    <button class="edit-btn" data-service="consulta_completa">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="service-name">Limpar Nome</div>
+                                    <div class="service-description">Regularização de pendências nos órgãos de proteção ao crédito</div>
+                                </td>
+                                <td class="price">R$ 300,00</td>
+                                <td class="price-reseller">R$ 240,00</td>
+                                <td>
+                                    <button class="edit-btn" data-service="limpar_nome">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="service-name">Rating Bancário</div>
+                                    <div class="service-description">Melhoria da classificação bancária e aprovação de crédito</div>
+                                </td>
+                                <td class="price">R$ 450,00</td>
+                                <td class="price-reseller">R$ 360,00</td>
+                                <td>
+                                    <button class="edit-btn" data-service="rating_bancario">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="service-name">Combo (Limpar nome e Aumento de Score)</div>
+                                    <div class="service-description">Combinação de serviços para limpar nome e aumentar pontuação de crédito</div>
+                                </td>
+                                <td class="price">R$ 650,00</td>
+                                <td class="price-reseller">R$ 520,00</td>
+                                <td>
+                                    <button class="edit-btn" data-service="combo_limpar_score">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="service-name">Combo (Rating e Limpa Nome)</div>
+                                    <div class="service-description">Melhoria do rating bancário com limpeza de nome</div>
+                                </td>
+                                <td class="price">R$ 650,00</td>
+                                <td class="price-reseller">R$ 520,00</td>
+                                <td>
+                                    <button class="edit-btn" data-service="combo_rating_limpar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="service-name">Combo (Rating Bancário e Bacen)</div>
+                                    <div class="service-description">Melhoria de rating bancário e regularização no Banco Central</div>
+                                </td>
+                                <td class="price">R$ 850,00</td>
+                                <td class="price-reseller">R$ 680,00</td>
+                                <td>
+                                    <button class="edit-btn" data-service="combo_rating_bacen">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="service-name">Combo Completo</div>
+                                    <div class="service-description">Pacote completo incluindo limpeza de nome, rating bancário e regularização Bacen</div>
+                                </td>
+                                <td class="price">R$ 950,00</td>
+                                <td class="price-reseller">R$ 760,00</td>
+                                <td>
+                                    <button class="edit-btn" data-service="combo_completo">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Margem de Lucro para Revendedores</h2>
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <div style="flex: 1;">
+                            <p>Defina a margem de lucro padrão para revendedores. Este valor será aplicado para todos os serviços.</p>
+                        </div>
+                        <div style="width: 150px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="margem-lucro">Margem de Lucro (%)</label>
+                                <input type="number" id="margem-lucro" value="20" min="0" max="50">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="aplicar-margem-btn">
+                            <i class="fas fa-check"></i> Aplicar
+                        </button>
+                    </div>
+                    
+                    <div style="background-color: var(--light-bg); padding: 15px; border-radius: var(--border-radius);">
+                        <div style="color: var(--primary-color); font-weight: 500; margin-bottom: 10px;">
+                            <i class="fas fa-info-circle"></i> Informações sobre a margem de lucro
+                        </div>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;">A margem de lucro é a diferença percentual entre o valor cobrado pelo revendedor e o valor que ele paga para a LW Soluções.</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 0;">Por exemplo: Se o valor para o cliente final é R$ 100,00 e a margem de lucro é 20%, o valor para o revendedor será R$ 80,00, ou seja, ele terá R$ 20,00 de lucro por venda.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Editar Valor -->
+    <div class="modal" id="editarValorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Editar Valores para <span id="serviceName">Serviço</span></h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editarValorForm" class="form-grid">
+                    <div class="form-group">
+                        <label for="valorClienteFinal">Valor para Cliente Final</label>
+                        <input type="number" id="valorClienteFinal" name="valorClienteFinal" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="valorRevendedor">Valor para Revendedor</label>
+                        <input type="number" id="valorRevendedor" name="valorRevendedor" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label for="descricaoServico">Descrição do Serviço</label>
+                        <textarea id="descricaoServico" name="descricaoServico" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="cancelarBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="salvarBtn">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Confirmar Atualização Global -->
+    <div class="modal" id="confirmarAtualizacaoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Atualização</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja atualizar todos os valores dos serviços?</p>
+                <p>Esta ação irá aplicar os valores atuais para todos os pedidos futuros.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelarAtualizacaoBtn">Cancelar</button>
+                <button class="btn btn-primary" id="confirmarAtualizacaoBtn">Confirmar Atualização</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const editButtons = document.querySelectorAll('.edit-btn');
+            const editarValorModal = document.getElementById('editarValorModal');
+            const editarValorForm = document.getElementById('editarValorForm');
+            const serviceName = document.getElementById('serviceName');
+            const valorClienteFinal = document.getElementById('valorClienteFinal');
+            const valorRevendedor = document.getElementById('valorRevendedor');
+            const descricaoServico = document.getElementById('descricaoServico');
+            const cancelarBtn = document.getElementById('cancelarBtn');
+            const atualizarTabelaBtn = document.getElementById('atualizar-tabela-btn');
+            const confirmarAtualizacaoModal = document.getElementById('confirmarAtualizacaoModal');
+            const cancelarAtualizacaoBtn = document.getElementById('cancelarAtualizacaoBtn');
+            const confirmarAtualizacaoBtn = document.getElementById('confirmarAtualizacaoBtn');
+            const aplicarMargemBtn = document.getElementById('aplicar-margem-btn');
+            const margemLucroInput = document.getElementById('margem-lucro');
+            const overlay = document.querySelector('.overlay');
+            
+            // Dados dos serviços (simulando banco de dados)
+            const servicos = {
+                'consulta_completa': {
+                    nome: 'Consulta Completa',
+                    descricao: 'Checagem completa em todos os órgãos de proteção ao crédito',
+                    valorClienteFinal: 350,
+                    valorRevendedor: 280
+                },
+                'limpar_nome': {
+                    nome: 'Limpar Nome',
+                    descricao: 'Regularização de pendências nos órgãos de proteção ao crédito',
+                    valorClienteFinal: 300,
+                    valorRevendedor: 240
+                },
+                'rating_bancario': {
+                    nome: 'Rating Bancário',
+                    descricao: 'Melhoria da classificação bancária e aprovação de crédito',
+                    valorClienteFinal: 450,
+                    valorRevendedor: 360
+                },
+                'combo_limpar_score': {
+                    nome: 'Combo (Limpar nome e Aumento de Score)',
+                    descricao: 'Combinação de serviços para limpar nome e aumentar pontuação de crédito',
+                    valorClienteFinal: 650,
+                    valorRevendedor: 520
+                },
+                'combo_rating_limpar': {
+                    nome: 'Combo (Rating e Limpa Nome)',
+                    descricao: 'Melhoria do rating bancário com limpeza de nome',
+                    valorClienteFinal: 650,
+                    valorRevendedor: 520
+                },
+                'combo_rating_bacen': {
+                    nome: 'Combo (Rating Bancário e Bacen)',
+                    descricao: 'Melhoria de rating bancário e regularização no Banco Central',
+                    valorClienteFinal: 850,
+                    valorRevendedor: 680
+                },
+                'combo_completo': {
+                    nome: 'Combo Completo',
+                    descricao: 'Pacote completo incluindo limpeza de nome, rating bancário e regularização Bacen',
+                    valorClienteFinal: 950,
+                    valorRevendedor: 760
+                }
+            };
+            
+            let servicoAtual = '';
+            
+            // Função para formatar valor monetário
+            function formatarMoeda(valor) {
+                return new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                }).format(valor);
+            }
+            
+            // Função para abrir modal
+            function abrirModal(modal) {
+                modal.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            // Função para fechar modal
+            function fecharModal(modal) {
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            // Função para fechar todos os modais
+            function fecharTodosModais() {
+                const modais = document.querySelectorAll('.modal');
+                modais.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                overlay.classList.remove('active');
+            }
+            
+            // Ação para botão de editar valor
+            if (editButtons.length > 0) {
+                editButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const serviceKey = this.getAttribute('data-service');
+                        const servico = servicos[serviceKey];
+                        
+                        if (servico) {
+                            servicoAtual = serviceKey;
+                            serviceName.textContent = servico.nome;
+                            valorClienteFinal.value = servico.valorClienteFinal;
+                            valorRevendedor.value = servico.valorRevendedor;
+                            descricaoServico.value = servico.descricao;
+                            
+                            abrirModal(editarValorModal);
+                        }
+                    });
+                });
+            }
+            
+            // Ação para botão de cancelar edição
+            if (cancelarBtn) {
+                cancelarBtn.addEventListener('click', function() {
+                    fecharModal(editarValorModal);
+                });
+            }
+            
+            // Manipular formulário de edição
+            if (editarValorForm) {
+                editarValorForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    if (servicoAtual && servicos[servicoAtual]) {
+                        // Validar valores
+                        const clienteValue = parseFloat(valorClienteFinal.value);
+                        const revendedorValue = parseFloat(valorRevendedor.value);
+                        
+                        if (revendedorValue >= clienteValue) {
+                            alert('O valor para revendedor deve ser menor que o valor para cliente final.');
+                            return;
+                        }
+                        
+                        // Atualizar dados
+                        servicos[servicoAtual].valorClienteFinal = clienteValue;
+                        servicos[servicoAtual].valorRevendedor = revendedorValue;
+                        servicos[servicoAtual].descricao = descricaoServico.value;
+                        
+                        // Atualizar tabela
+                        const row = document.querySelector(`.edit-btn[data-service="${servicoAtual}"]`).closest('tr');
+                        row.querySelector('.price').textContent = formatarMoeda(clienteValue);
+                        row.querySelector('.price-reseller').textContent = formatarMoeda(revendedorValue);
+                        row.querySelector('.service-description').textContent = descricaoServico.value;
+                        
+                        // Fechar modal
+                        fecharModal(editarValorModal);
+                        
+                        // Mensagem de sucesso (poderia ser substituída por um toast)
+                        alert('Valores atualizados com sucesso!');
+                    }
+                });
+            }
+            
+            // Ação para botão de atualizar tabela
+            if (atualizarTabelaBtn) {
+                atualizarTabelaBtn.addEventListener('click', function() {
+                    abrirModal(confirmarAtualizacaoModal);
+                });
+            }
+            
+            // Cancelar atualização global
+            if (cancelarAtualizacaoBtn) {
+                cancelarAtualizacaoBtn.addEventListener('click', function() {
+                    fecharModal(confirmarAtualizacaoModal);
+                });
+            }
+            
+            // Confirmar atualização global
+            if (confirmarAtualizacaoBtn) {
+                confirmarAtualizacaoBtn.addEventListener('click', function() {
+                    // Aqui você implementaria a chamada de API para atualizar os valores
+                    // Simulação de sucesso
+                    setTimeout(function() {
+                        fecharModal(confirmarAtualizacaoModal);
+                        alert('Tabela de valores atualizada com sucesso!');
+                    }, 500);
+                });
+            }
+            
+            // Aplicar margem de lucro
+            if (aplicarMargemBtn) {
+                aplicarMargemBtn.addEventListener('click', function() {
+                    const margem = parseFloat(margemLucroInput.value);
+                    
+                    if (isNaN(margem) || margem < 0 || margem > 50) {
+                        alert('Por favor, digite uma margem válida entre 0 e 50%.');
+                        return;
+                    }
+                    
+                    // Confirmar aplicação da margem
+                    if (confirm(`Tem certeza que deseja aplicar uma margem de ${margem}% para todos os serviços?`)) {
+                        // Aplicar margem para todos os serviços
+                        for (const key in servicos) {
+                            const servico = servicos[key];
+                            const valorClienteFinal = servico.valorClienteFinal;
+                            const novoValorRevendedor = valorClienteFinal * (1 - (margem / 100));
+                            
+                            servico.valorRevendedor = Math.round(novoValorRevendedor);
+                            
+                            // Atualizar tabela
+                            const row = document.querySelector(`.edit-btn[data-service="${key}"]`).closest('tr');
+                            row.querySelector('.price-reseller').textContent = formatarMoeda(servico.valorRevendedor);
+                        }
+                        
+                        alert('Margem de lucro aplicada com sucesso para todos os serviços!');
+                    }
+                });
+            }
+            
+            // Fechar modais com botão X
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            if (closeModalButtons.length > 0) {
+                closeModalButtons.forEach(btn => {
+                    btn.addEventListener('click', fecharTodosModais);
+                });
+            }
+            
+            // Fechar modais clicando no overlay
+            if (overlay) {
+                overlay.addEventListener('click', fecharTodosModais);
+            }
+        });
+    </script>
+</body>
+</html>

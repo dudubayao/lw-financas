@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para página de configurações */
+        .configuracoes-container {
+            margin: 20px 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .form-section-title {
+            grid-column: span 2;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(22, 71, 133, 0.2);
+        }
+        
+        .form-group-full {
+            grid-column: span 2;
+        }
+        
+        .form-actions {
+            grid-column: span 2;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .switch-slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:focus + .switch-slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+        
+        input:checked + .switch-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .setting-item {
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .setting-info h3 {
+            font-size: 1rem;
+            margin: 0 0 5px;
+            color: var(--text-color);
+        }
+        
+        .setting-info p {
+            font-size: 0.85rem;
+            margin: 0;
+            color: var(--text-light);
+        }
+        
+        .setting-option {
+            min-width: 70px;
+            text-align: right;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-section-title,
+            .form-group-full,
+            .form-actions {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pedidos de Revendedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listas.html">
+                        <i class="fas fa-list-alt"></i>
+                        <span>Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="valores.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Valores dos Serviços</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Configurações</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Administrador</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Configurações Container -->
+        <div class="configuracoes-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Configurações do Sistema</h2>
+                </div>
+                <div class="card-body">
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Notificações por E-mail</h3>
+                                <p>Receba atualizações sobre pedidos e processos</p>
+                            </div>
+                            <div class="setting-option">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Notificações no Sistema</h3>
+                                <p>Exibir alertas e notificações dentro do dashboard</p>
+                            </div>
+                            <div class="setting-option">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Relatórios Automáticos</h3>
+                                <p>Enviar relatórios semanais por e-mail</p>
+                            </div>
+                            <div class="setting-option">
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Modo Escuro</h3>
+                                <p>Alterar para tema escuro</p>
+                            </div>
+                            <div class="setting-option">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="dark-mode-toggle">
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Configurações da Conta</h2>
+                </div>
+                <div class="card-body">
+                    <form id="accountSettingsForm" class="form-grid">
+                        <div class="form-section-title">Informações Pessoais</div>
+                        
+                        <div class="form-group">
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" name="nome" value="Administrador" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sobrenome">Sobrenome</label>
+                            <input type="text" id="sobrenome" name="sobrenome" value="Sistema" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" value="admin@lwsolucoes.com.br" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefone">Telefone</label>
+                            <input type="tel" id="telefone" name="telefone" value="(11) 99999-9999" required>
+                        </div>
+                        
+                        <div class="form-section-title">Alterar Senha</div>
+                        
+                        <div class="form-group">
+                            <label for="senha_atual">Senha Atual</label>
+                            <input type="password" id="senha_atual" name="senha_atual">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nova_senha">Nova Senha</label>
+                            <input type="password" id="nova_senha" name="nova_senha">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmar_senha">Confirmar Nova Senha</label>
+                            <input type="password" id="confirmar_senha" name="confirmar_senha">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="reset" class="btn btn-outline">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Configurações de E-mail</h2>
+                </div>
+                <div class="card-body">
+                    <form id="emailSettingsForm" class="form-grid">
+                        <div class="form-group form-group-full">
+                            <label for="email_servidor">Servidor SMTP</label>
+                            <input type="text" id="email_servidor" name="email_servidor" value="smtp.lwsolucoes.com.br">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email_porta">Porta</label>
+                            <input type="number" id="email_porta" name="email_porta" value="587">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email_seguranca">Segurança</label>
+                            <select id="email_seguranca" name="email_seguranca">
+                                <option value="tls" selected>TLS</option>
+                                <option value="ssl">SSL</option>
+                                <option value="none">Nenhuma</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email_usuario">Usuário</label>
+                            <input type="text" id="email_usuario" name="email_usuario" value="notificacoes@lwsolucoes.com.br">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email_senha">Senha</label>
+                            <input type="password" id="email_senha" name="email_senha" value="********">
+                        </div>
+                        
+                        <div class="form-group form-group-full">
+                            <label for="email_remetente">Nome do Remetente</label>
+                            <input type="text" id="email_remetente" name="email_remetente" value="LW Soluções Financeiras">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="testarEmailBtn">Testar Conexão</button>
+                            <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Backup do Sistema</h2>
+                </div>
+                <div class="card-body">
+                    <p style="margin-bottom: 20px;">Configure o backup automático do sistema para garantir a segurança dos seus dados.</p>
+                    
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Backup Automático</h3>
+                                <p>Realizar backup diário do sistema</p>
+                            </div>
+                            <div class="setting-option">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="switch-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Horário do Backup</h3>
+                                <p>Definir horário para execução do backup</p>
+                            </div>
+                            <div class="setting-option">
+                                <input type="time" value="02:00" style="padding: 5px; border-radius: 4px; border: 1px solid var(--border-color);">
+                            </div>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Retenção de Backups</h3>
+                                <p>Número de backups a manter</p>
+                            </div>
+                            <div class="setting-option">
+                                <select style="padding: 5px; border-radius: 4px; border: 1px solid var(--border-color);">
+                                    <option value="7">7 dias</option>
+                                    <option value="14" selected>14 dias</option>
+                                    <option value="30">30 dias</option>
+                                    <option value="90">90 dias</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; margin-top: 20px; gap: 10px;">
+                        <button class="btn btn-outline" id="realizarBackupBtn">
+                            <i class="fas fa-database"></i> Realizar Backup Agora
+                        </button>
+                        <button class="btn btn-primary" id="salvarConfigBackupBtn">
+                            <i class="fas fa-save"></i> Salvar Configurações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Teste de E-mail -->
+    <div class="modal" id="testeEmailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Teste de Conexão SMTP</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="email-teste-loading" style="text-align: center; display: none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+                    <p>Testando conexão com o servidor SMTP...</p>
+                </div>
+                
+                <div id="email-teste-success" style="text-align: center; display: none;">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--success-color); margin-bottom: 15px;"></i>
+                    <p>Conexão estabelecida com sucesso! O e-mail de teste foi enviado.</p>
+                </div>
+                
+                <div id="email-teste-error" style="text-align: center; display: none;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--danger-color); margin-bottom: 15px;"></i>
+                    <p>Falha ao conectar com o servidor SMTP.</p>
+                    <p id="erro-message" style="font-style: italic; margin-top: 10px;"></p>
+                </div>
+                
+                <form id="emailTesteForm" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label for="email_teste">E-mail para Teste</label>
+                        <input type="email" id="email_teste" name="email_teste" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelarTesteBtn">Cancelar</button>
+                <button class="btn btn-primary" id="enviarTesteBtn">Enviar Teste</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Confirmação de Backup -->
+    <div class="modal" id="backupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Backup do Sistema</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="backup-loading" style="text-align: center; display: none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+                    <p>Realizando backup do sistema...</p>
+                </div>
+                
+                <div id="backup-success" style="text-align: center; display: none;">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--success-color); margin-bottom: 15px;"></i>
+                    <p>Backup concluído com sucesso!</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">O arquivo foi salvo em: /backups/backup_10042025_153045.zip</p>
+                </div>
+                
+                <div id="backup-error" style="text-align: center; display: none;">
+                    <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--danger-color); margin-bottom: 15px;"></i>
+                    <p>Falha ao realizar backup.</p>
+                    <p id="backup-error-message" style="font-style: italic; margin-top: 10px;"></p>
+                </div>
+                
+                <div id="backup-confirm">
+                    <p>Tem certeza que deseja realizar um backup completo do sistema agora?</p>
+                    <p style="font-size: 0.9rem; margin-top: 10px;">Isso pode levar alguns minutos, dependendo da quantidade de dados.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelarBackupBtn">Cancelar</button>
+                <button class="btn btn-primary" id="confirmarBackupBtn">Confirmar Backup</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const testarEmailBtn = document.getElementById('testarEmailBtn');
+            const testeEmailModal = document.getElementById('testeEmailModal');
+            const emailTesteForm = document.getElementById('emailTesteForm');
+            const enviarTesteBtn = document.getElementById('enviarTesteBtn');
+            const cancelarTesteBtn = document.getElementById('cancelarTesteBtn');
+            const emailTesteLoading = document.getElementById('email-teste-loading');
+            const emailTesteSuccess = document.getElementById('email-teste-success');
+            const emailTesteError = document.getElementById('email-teste-error');
+            const erroMessage = document.getElementById('erro-message');
+            
+            const realizarBackupBtn = document.getElementById('realizarBackupBtn');
+            const backupModal = document.getElementById('backupModal');
+            const confirmarBackupBtn = document.getElementById('confirmarBackupBtn');
+            const cancelarBackupBtn = document.getElementById('cancelarBackupBtn');
+            const backupLoading = document.getElementById('backup-loading');
+            const backupSuccess = document.getElementById('backup-success');
+            const backupError = document.getElementById('backup-error');
+            const backupConfirm = document.getElementById('backup-confirm');
+            const backupErrorMessage = document.getElementById('backup-error-message');
+            
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const accountSettingsForm = document.getElementById('accountSettingsForm');
+            const emailSettingsForm = document.getElementById('emailSettingsForm');
+            const overlay = document.querySelector('.overlay');
+            
+            // Funções para manipular modais
+            function openModal(modal) {
+                modal.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            function closeModal(modal) {
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            function closeAllModals() {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                overlay.classList.remove('active');
+            }
+            
+            // Teste de E-mail
+            if (testarEmailBtn) {
+                testarEmailBtn.addEventListener('click', function() {
+                    // Resetar estado do modal
+                    emailTesteForm.style.display = 'block';
+                    emailTesteLoading.style.display = 'none';
+                    emailTesteSuccess.style.display = 'none';
+                    emailTesteError.style.display = 'none';
+                    
+                    // Preencher o campo de e-mail com o valor padrão
+                    document.getElementById('email_teste').value = document.getElementById('email').value || '';
+                    
+                    // Abrir modal
+                    openModal(testeEmailModal);
+                });
+            }
+            
+            // Enviar teste de e-mail
+            if (enviarTesteBtn) {
+                enviarTesteBtn.addEventListener('click', function() {
+                    const emailTeste = document.getElementById('email_teste').value;
+                    
+                    if (!emailTeste) {
+                        alert('Por favor, informe um e-mail para teste.');
+                        return;
+                    }
+                    
+                    // Esconder formulário e mostrar loading
+                    emailTesteForm.style.display = 'none';
+                    emailTesteLoading.style.display = 'block';
+                    enviarTesteBtn.disabled = true;
+                    cancelarTesteBtn.disabled = true;
+                    
+                    // Simular envio (substituir por chamada AJAX real)
+                    setTimeout(function() {
+                        // Simulação de sucesso (80% das vezes)
+                        const success = Math.random() < 0.8;
+                        
+                        emailTesteLoading.style.display = 'none';
+                        
+                        if (success) {
+                            emailTesteSuccess.style.display = 'block';
+                        } else {
+                            emailTesteError.style.display = 'block';
+                            erroMessage.textContent = 'Erro de conexão: Verifique as credenciais e configurações do servidor.';
+                        }
+                        
+                        enviarTesteBtn.disabled = false;
+                        cancelarTesteBtn.disabled = false;
+                    }, 2000);
+                });
+            }
+            
+            // Fechar modal de teste de e-mail
+            if (cancelarTesteBtn) {
+                cancelarTesteBtn.addEventListener('click', function() {
+                    closeModal(testeEmailModal);
+                });
+            }
+            
+            // Backup do sistema
+            if (realizarBackupBtn) {
+                realizarBackupBtn.addEventListener('click', function() {
+                    // Resetar estado do modal
+                    backupConfirm.style.display = 'block';
+                    backupLoading.style.display = 'none';
+                    backupSuccess.style.display = 'none';
+                    backupError.style.display = 'none';
+                    
+                    // Abrir modal
+                    openModal(backupModal);
+                });
+            }
+            
+            // Confirmar backup
+            if (confirmarBackupBtn) {
+                confirmarBackupBtn.addEventListener('click', function() {
+                    // Esconder confirmação e mostrar loading
+                    backupConfirm.style.display = 'none';
+                    backupLoading.style.display = 'block';
+                    confirmarBackupBtn.disabled = true;
+                    cancelarBackupBtn.disabled = true;
+                    
+                    // Simular backup (substituir por chamada AJAX real)
+                    setTimeout(function() {
+                        // Simulação de sucesso (90% das vezes)
+                        const success = Math.random() < 0.9;
+                        
+                        backupLoading.style.display = 'none';
+                        
+                        if (success) {
+                            backupSuccess.style.display = 'block';
+                        } else {
+                            backupError.style.display = 'block';
+                            backupErrorMessage.textContent = 'Erro: Não foi possível acessar o diretório de backup. Verifique as permissões.';
+                        }
+                        
+                        confirmarBackupBtn.disabled = false;
+                        cancelarBackupBtn.disabled = false;
+                        
+                        // Atualizar texto do botão
+                        confirmarBackupBtn.textContent = 'Fechar';
+                        cancelarBackupBtn.style.display = 'none';
+                        
+                        // Alterar ação do botão para fechar o modal
+                        confirmarBackupBtn.removeEventListener('click', arguments.callee);
+                        confirmarBackupBtn.addEventListener('click', function() {
+                            closeModal(backupModal);
+                        });
+                    }, 3000);
+                });
+            }
+            
+            // Fechar modal de backup
+            if (cancelarBackupBtn) {
+                cancelarBackupBtn.addEventListener('click', function() {
+                    closeModal(backupModal);
+                });
+            }
+            
+            // Toggle modo escuro (simulado)
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('change', function() {
+                    if (this.checked) {
+                        alert('Modo escuro ativado! (Esta é apenas uma simulação, para implementação completa seria necessário adicionar CSS para o tema escuro)');
+                    } else {
+                        alert('Modo escuro desativado!');
+                    }
+                });
+            }
+            
+            // Formulário de configurações da conta
+            if (accountSettingsForm) {
+                accountSettingsForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Validar senhas
+                    const senhaAtual = document.getElementById('senha_atual').value;
+                    const novaSenha = document.getElementById('nova_senha').value;
+                    const confirmarSenha = document.getElementById('confirmar_senha').value;
+                    
+                    if ((novaSenha || confirmarSenha) && !senhaAtual) {
+                        alert('Por favor, informe sua senha atual para alterar a senha.');
+                        return;
+                    }
+                    
+                    if (novaSenha && novaSenha !== confirmarSenha) {
+                        alert('A nova senha e a confirmação não coincidem.');
+                        return;
+                    }
+                    
+                    // Simular salvamento (substituir por chamada AJAX real)
+                    alert('Configurações da conta atualizadas com sucesso!');
+                });
+            }
+            
+            // Formulário de configurações de e-mail
+            if (emailSettingsForm) {
+                emailSettingsForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Simular salvamento (substituir por chamada AJAX real)
+                    alert('Configurações de e-mail atualizadas com sucesso!');
+                });
+            }
+            
+            // Salvar configurações de backup
+            const salvarConfigBackupBtn = document.getElementById('salvarConfigBackupBtn');
+            if (salvarConfigBackupBtn) {
+                salvarConfigBackupBtn.addEventListener('click', function() {
+                    // Simular salvamento (substituir por chamada AJAX real)
+                    alert('Configurações de backup atualizadas com sucesso!');
+                });
+            }
+            
+            // Fechar modais com botão X
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            if (closeModalButtons.length > 0) {
+                closeModalButtons.forEach(btn => {
+                    btn.addEventListener('click', closeAllModals);
+                });
+            }
+            
+            // Fechar modais clicando no overlay
+            if (overlay) {
+                overlay.addEventListener('click', closeAllModals);
+            }
+            
+            // Mascarar telefone
+            const telefoneInput = document.getElementById('telefone');
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    if (value.length > 0) {
+                        // Formato: (00) 00000-0000
+                        if (value.length <= 2) {
+                            value = `(${value}`;
+                        } else if (value.length <= 7) {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+                        } else if (value.length <= 11) {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
+                        } else {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7, 11)}`;
+                        }
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

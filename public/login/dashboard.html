@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Revendedor | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li class="active">
+                    <a href="dashboard.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="menu-dropdown">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Cadastrar Serviço</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="cadastro-cliente.html">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Cadastrar Cliente</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="meus-pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Meus Pedidos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="datas-listas.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Datas das Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="processos.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Acompanhar Processos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Dashboard</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquisar...">
+                    <button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">2</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Carlos Silva</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="perfil.html">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Date Filter -->
+        <div class="date-filter">
+            <div class="welcome-message">
+                <h3>Olá, Carlos Silva!</h3>
+                <p>Bem-vindo ao seu dashboard</p>
+            </div>
+            <div class="filter-controls">
+                <div class="date-inputs">
+                    <div class="input-group">
+                        <label for="start-date">Data Inicial</label>
+                        <input type="date" id="start-date" name="start-date">
+                    </div>
+                    <div class="input-group">
+                        <label for="end-date">Data Final</label>
+                        <input type="date" id="end-date" name="end-date">
+                    </div>
+                </div>
+                <button class="btn btn-filter">
+                    <i class="fas fa-filter"></i>
+                    Filtrar
+                </button>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Total de Clientes</h3>
+                        <h2>42</h2>
+                        <p>+5 nos últimos 30 dias</p>
+                    </div>
+                    <div class="stat-card-icon purple">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Processos Ativos</h3>
+                        <h2>28</h2>
+                        <p>+3 em relação ao mês anterior</p>
+                    </div>
+                    <div class="stat-card-icon blue">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Processos Concluídos</h3>
+                        <h2>14</h2>
+                        <p>+2 nos últimos 30 dias</p>
+                    </div>
+                    <div class="stat-card-icon green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Aguardando Pagamento</h3>
+                        <h2>5</h2>
+                        <p>-2 em relação ao mês anterior</p>
+                    </div>
+                    <div class="stat-card-icon yellow">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <!-- Serviços Contratados Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Serviços Contratados</h3>
+                    <div class="chart-actions">
+                        <button class="btn-icon" data-action="download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn-icon" data-action="expand">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <div class="chart-period">
+                            <select id="services-period">
+                                <option value="month">Último mês</option>
+                                <option value="quarter">Último trimestre</option>
+                                <option value="year">Último ano</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="servicesChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Status dos Processos Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Status dos Processos</h3>
+                    <div class="chart-actions">
+                        <button class="btn-icon" data-action="download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn-icon" data-action="expand">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Clients -->
+        <div class="recent-activity">
+            <div class="section-header">
+                <h3>Clientes Recentes</h3>
+                <a href="meus-pedidos.html" class="btn-text">Ver Todos</a>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>CPF/CNPJ</th>
+                            <th>Serviço</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>João Pereira</td>
+                            <td>123.456.789-00</td>
+                            <td>Consulta Completa</td>
+                            <td>08/04/2025</td>
+                            <td><span class="status-badge status-pago">Pago</span></td>
+                            <td>R$ 350,00</td>
+                        </tr>
+                        <tr>
+                            <td>Maria Oliveira</td>
+                            <td>987.654.321-00</td>
+                            <td>Combo (Limpar nome e Aumento de Score)</td>
+                            <td>07/04/2025</td>
+                            <td><span class="status-badge status-aguardando">Aguardando Pagamento</span></td>
+                            <td>R$ 750,00</td>
+                        </tr>
+                        <tr>
+                            <td>Pedro Santos</td>
+                            <td>456.789.123-00</td>
+                            <td>Apenas Rating Bancário</td>
+                            <td>06/04/2025</td>
+                            <td><span class="status-badge status-protocolado">Processo Protocolado</span></td>
+                            <td>R$ 450,00</td>
+                        </tr>
+                        <tr>
+                            <td>Ana Costa</td>
+                            <td>789.123.456-00</td>
+                            <td>Combo (Rating Bancário e Bacen)</td>
+                            <td>05/04/2025</td>
+                            <td><span class="status-badge status-baixado">Processo Baixado</span></td>
+                            <td>R$ 850,00</td>
+                        </tr>
+                        <tr>
+                            <td>Roberto Lima</td>
+                            <td>321.654.987-00</td>
+                            <td>Apenas Limpar Nome</td>
+                            <td>04/04/2025</td>
+                            <td><span class="status-badge status-refazer">Refazer</span></td>
+                            <td>R$ 300,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Sistema de Alertas/Notificações -->
+        <div class="notifications-panel">
+            <div class="section-header">
+                <h3>Notificações e Alertas</h3>
+                <a href="#" class="btn-text">Marcar todas como lidas</a>
+            </div>
+            
+            <div class="notifications-list">
+                <div class="notification-item unread">
+                    <div class="notification-icon blue">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <h4>Nova lista disponível</h4>
+                            <span class="notification-time">Hoje, 10:30</span>
+                        </div>
+                        <p>A lista #123 com seus clientes foi processada e está disponível para consulta.</p>
+                        <div class="notification-actions">
+                            <a href="datas-listas.html" class="btn-text">Ver Lista</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notification-item unread">
+                    <div class="notification-icon green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <h4>Processo Concluído</h4>
+                            <span class="notification-time">Ontem, 15:45</span>
+                        </div>
+                        <p>O processo de Limpar Nome do cliente João Pereira foi concluído com sucesso.</p>
+                        <div class="notification-actions">
+                            <a href="processos.html" class="btn-text">Ver Detalhes</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <div class="notification-icon yellow">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-header">
+                            <h4>Pagamento Pendente</h4>
+                            <span class="notification-time">07/04/2025, 09:20</span>
+                        </div>
+                        <p>Há 1 cliente com pagamento pendente. Verifique e entre em contato.</p>
+                        <div class="notification-actions">
+                            <a href="meus-pedidos.html?status=pendente" class="btn-text">Ver Pendências</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const body = document.body;
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    body.classList.toggle('sidebar-collapsed');
+                });
+            }
+            
+            // Dropdown menus
+            const dropdownMenus = document.querySelectorAll('.menu-dropdown');
+            
+            if (dropdownMenus.length > 0) {
+                dropdownMenus.forEach(menu => {
+                    menu.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const submenu = this.nextElementSibling;
+                        submenu.classList.toggle('active');
+                        const icon = this.querySelector('.dropdown-icon');
+                        icon.classList.toggle('rotate');
+                    });
+                });
+            }
+            
+            // User dropdown
+            const userBtn = document.querySelector('.user-btn');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            
+            if (userBtn && dropdownMenu) {
+                userBtn.addEventListener('click', function() {
+                    dropdownMenu.classList.toggle('active');
+                });
+                
+                // Fechar dropdown ao clicar fora
+                document.addEventListener('click', function(e) {
+                    if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Logout modal
+            const logoutBtns = document.querySelectorAll('#logout-btn, #logout-dropdown');
+            const logoutModal = document.getElementById('logoutModal');
+            const closeModal = document.querySelector('.close-modal');
+            const cancelLogout = document.getElementById('cancelLogout');
+            const confirmLogout = document.getElementById('confirmLogout');
+            const overlay = document.querySelector('.overlay');
+            
+            function openLogoutModal() {
+                logoutModal.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            function closeLogoutModal() {
+                logoutModal.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            if (logoutBtns.length > 0 && logoutModal) {
+                logoutBtns.forEach(btn => {
+                    btn.addEventListener('click', openLogoutModal);
+                });
+                
+                if (closeModal) closeModal.addEventListener('click', closeLogoutModal);
+                if (cancelLogout) cancelLogout.addEventListener('click', closeLogoutModal);
+                if (overlay) overlay.addEventListener('click', closeLogoutModal);
+                
+                if (confirmLogout) {
+                    confirmLogout.addEventListener('click', function() {
+                        // Lógica para logout (remover token e redirecionar)
+                        localStorage.removeItem('auth_token');
+                        sessionStorage.removeItem('auth_token');
+                        
+                        // Redirecionar para a página de login
+                        window.location.href = '/login';
+                    });
+                }
+            }
+            
+            // Chart.js - Gráfico de Serviços Contratados
+            const servicesChartEl = document.getElementById('servicesChart');
+            
+            if (servicesChartEl) {
+                const servicesChart = new Chart(servicesChartEl, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            'Consulta Completa',
+                            'Limpar Nome',
+                            'Rating Bancário',
+                            'Combo (Limpar Nome + Score)',
+                            'Combo (Rating + Limpa Nome)',
+                            'Combo (Rating + Bacen)',
+                            'Combo Completo'
+                        ],
+                        datasets: [{
+                            data: [8, 12, 6, 7, 4, 3, 2],
+                            backgroundColor: [
+                                '#0a2f5c',
+                                '#164785',
+                                '#2d7dd2',
+                                '#f2d675',
+                                '#D4AF37',
+                                '#ba9121',
+                                '#97731a'
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 15
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 15,
+                                    padding: 15,
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                padding: 10,
+                                cornerRadius: 5
+                            }
+                        }
+                    }
+                });
+                
+                // Atualizar gráfico quando mudar o período
+                const servicesPeriod = document.getElementById('services-period');
+                if (servicesPeriod) {
+                    servicesPeriod.addEventListener('change', function() {
+                        const period = this.value;
+                        let data;
+                        
+                        switch (period) {
+                            case 'month':
+                                data = [8, 12, 6, 7, 4, 3, 2];
+                                break;
+                            case 'quarter':
+                                data = [15, 20, 12, 18, 10, 8, 5];
+                                break;
+                            case 'year':
+                                data = [35, 45, 30, 40, 25, 15, 10];
+                                break;
+                            default:
+                                data = [8, 12, 6, 7, 4, 3, 2];
+                        }
+                        
+                        servicesChart.data.datasets[0].data = data;
+                        servicesChart.update();
+                    });
+                }
+            }
+            
+            // Chart.js - Gráfico de Status dos Processos
+            const statusChartEl = document.getElementById('statusChart');
+            
+            if (statusChartEl) {
+                const statusChart = new Chart(statusChartEl, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'Aguardando Pagamento',
+                            'Pago',
+                            'Processo Protocolado',
+                            'Processo Baixado',
+                            'Refazer'
+                        ],
+                        datasets: [{
+                            label: 'Quantidade',
+                            data: [5, 16, 12, 7, 2],
+                            backgroundColor: [
+                                '#ffc107',
+                                '#28a745',
+                                '#17a2b8',
+                                '#6f42c1',
+                                '#dc3545'
+                            ],
+                            borderWidth: 0,
+                            borderRadius: 5,
+                            maxBarThickness: 40
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                padding: 10,
+                                cornerRadius: 5
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    drawBorder: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Data inicial e final com valores padrão
+            const startDateInput = document.getElementById('start-date');
+            const endDateInput = document.getElementById('end-date');
+            
+            if (startDateInput && endDateInput) {
+                // Definir data inicial como primeiro dia do mês atual
+                const today = new Date();
+                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                startDateInput.valueAsDate = firstDay;
+                
+                // Definir data final como hoje
+                endDateInput.valueAsDate = today;
+            }
+            
+            // Estilização para notificações
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    .notifications-panel {
+                        margin: 20px 30px;
+                        background-color: white;
+                        border-radius: var(--border-radius);
+                        box-shadow: var(--box-shadow);
+                        padding: 20px;
+                    }
+                    
+                    .notifications-list {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+                    }
+                    
+                    .notification-item {
+                        display: flex;
+                        gap: 15px;
+                        padding: 15px;
+                        border-radius: var(--border-radius);
+                        background-color: var(--light-bg);
+                        transition: var(--transition);
+                    }
+                    
+                    .notification-item.unread {
+                        border-left: 4px solid var(--primary-color);
+                    }
+                    
+                    .notification-item:hover {
+                        background-color: #f0f4f8;
+                    }
+                    
+                    .notification-icon {
+                        min-width: 40px;
+                        height: 40px;
+                        border-radius: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-size: 1rem;
+                    }
+                    
+                    .notification-icon.blue {
+                        background-color: var(--secondary-color);
+                    }
+                    
+                    .notification-icon.green {
+                        background-color: var(--success-color);
+                    }
+                    
+                    .notification-icon.yellow {
+                        background-color: var(--warning-color);
+                    }
+                    
+                    .notification-icon.red {
+                        background-color: var(--danger-color);
+                    }
+                    
+                    .notification-content {
+                        flex: 1;
+                    }
+                    
+                    .notification-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: flex-start;
+                        margin-bottom: 5px;
+                    }
+                    
+                    .notification-header h4 {
+                        color: var(--text-color);
+                        font-size: 1rem;
+                        font-weight: 500;
+                        margin: 0;
+                    }
+                    
+                    .notification-time {
+                        font-size: 0.8rem;
+                        color: var(--text-light);
+                    }
+                    
+                    .notification-content p {
+                        color: var(--text-color);
+                        font-size: 0.9rem;
+                        margin-bottom: 10px;
+                    }
+                    
+                    .notification-actions {
+                        display: flex;
+                        gap: 15px;
+                    }
+                    
+                    .submenu {
+                        display: none;
+                        padding-left: 35px;
+                        margin-top: 5px;
+                    }
+                    
+                    .submenu.active {
+                        display: block;
+                    }
+                    
+                    .dropdown-icon {
+                        transition: transform 0.3s ease;
+                        margin-left: auto;
+                    }
+                    
+                    .dropdown-icon.rotate {
+                        transform: rotate(180deg);
+                    }
+                    
+                    .status-badge {
+                        display: inline-block;
+                        padding: 5px 10px;
+                        border-radius: 20px;
+                        font-size: 0.8rem;
+                        font-weight: 500;
+                    }
+                    
+                    .status-aguardando {
+                        background-color: #fff8e1;
+                        color: #f57c00;
+                    }
+                    
+                    .status-pago {
+                        background-color: #e8f5e9;
+                        color: #2e7d32;
+                    }
+                    
+                    .status-protocolado {
+                        background-color: #e3f2fd;
+                        color: #1976d2;
+                    }
+                    
+                    .status-baixado {
+                        background-color: #f3e5f5;
+                        color: #7b1fa2;
+                    }
+                    
+                    .status-refazer {
+                        background-color: #ffebee;
+                        color: #c62828;
+                    }
+                </style>
+            `);
+        });
+    </script>
+</body>
+</html>

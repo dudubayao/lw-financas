@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Usuários | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para página de usuários */
+        .usuarios-container {
+            margin: 20px 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .usuarios-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .usuarios-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+        
+        .usuarios-filter {
+            background-color: var(--light-bg);
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .filter-item input,
+        .filter-item select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .data-table td {
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-ativo {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-inativo {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .btn-view {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .btn-view:hover {
+            background-color: #bbdefb;
+        }
+        
+        .btn-edit {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .btn-edit:hover {
+            background-color: #ffecb3;
+        }
+        
+        .btn-delete {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .btn-delete:hover {
+            background-color: #ef9a9a;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            background-color: var(--light-bg);
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pagination-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .pagination-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background-color: white;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .page-btn:hover:not(.active) {
+            background-color: var(--border-color);
+        }
+        
+        /* Estilos para o modal de adicionar/editar usuário */
+        .modal-content.modal-lg {
+            max-width: 550px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-grid .form-group:last-child {
+            grid-column: span 2;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(22, 71, 133, 0.2);
+        }
+        
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid .form-group:last-child {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pedidos de Revendedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listas.html">
+                        <i class="fas fa-list-alt"></i>
+                        <span>Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="valores.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Valores dos Serviços</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="usuarios.html">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Gerenciar Usuários</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquisar usuários...">
+                    <button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Administrador</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Usuários Container -->
+        <div class="usuarios-container">
+            <!-- Usuários Header -->
+            <div class="usuarios-header">
+                <h2>Lista de Usuários</h2>
+                <button class="btn btn-primary" id="addUserBtn">
+                    <i class="fas fa-user-plus"></i> Adicionar Usuário
+                </button>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="usuarios-filter">
+                <div class="filter-item">
+                    <label for="filter-nome">Nome</label>
+                    <input type="text" id="filter-nome" placeholder="Filtrar por nome">
+                </div>
+                
+                <div class="filter-item">
+                    <label for="filter-email">E-mail</label>
+                    <input type="text" id="filter-email" placeholder="Filtrar por e-mail">
+                </div>
+                
+                <div class="filter-item">
+                    <label for="filter-status">Status</label>
+                    <select id="filter-status">
+                        <option value="">Todos</option>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-broom"></i> Limpar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tabela de Usuários -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Data de Cadastro</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#001</td>
+                            <td>Carlos Silva</td>
+                            <td>carlos.silva@email.com</td>
+                            <td>(11) 98765-4321</td>
+                            <td>15/01/2025</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#002</td>
+                            <td>Maria Santos</td>
+                            <td>maria.santos@email.com</td>
+                            <td>(21) 98765-4321</td>
+                            <td>20/01/2025</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#003</td>
+                            <td>João Oliveira</td>
+                            <td>joao.oliveira@email.com</td>
+                            <td>(31) 98765-4321</td>
+                            <td>25/01/2025</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#004</td>
+                            <td>Ana Souza</td>
+                            <td>ana.souza@email.com</td>
+                            <td>(41) 98765-4321</td>
+                            <td>30/01/2025</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#005</td>
+                            <td>Pedro Lima</td>
+                            <td>pedro.lima@email.com</td>
+                            <td>(51) 98765-4321</td>
+                            <td>05/02/2025</td>
+                            <td><span class="status-badge status-inativo">Inativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#006</td>
+                            <td>Fernanda Costa</td>
+                            <td>fernanda.costa@email.com</td>
+                            <td>(61) 98765-4321</td>
+                            <td>10/02/2025</td>
+                            <td><span class="status-badge status-ativo">Ativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#007</td>
+                            <td>Roberto Almeida</td>
+                            <td>roberto.almeida@email.com</td>
+                            <td>(71) 98765-4321</td>
+                            <td>15/02/2025</td>
+                            <td><span class="status-badge status-inativo">Inativo</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Excluir">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Paginação -->
+            <div class="pagination">
+                <div class="pagination-info">
+                    Mostrando 1-7 de 15 resultados
+                </div>
+                <div class="pagination-buttons">
+                    <button class="page-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Adicionar/Editar Usuário -->
+    <div class="modal" id="userModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="modalTitle">Adicionar Usuário</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" name="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sobrenome">Sobrenome</label>
+                            <input type="text" id="sobrenome" name="sobrenome" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone</label>
+                            <input type="tel" id="telefone" name="telefone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="senha">Senha</label>
+                            <input type="password" id="senha" name="senha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmar_senha">Confirmar Senha</label>
+                            <input type="password" id="confirmar_senha" name="confirmar_senha" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status">
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="button" class="btn btn-outline" id="cancelUserForm">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Confirmar Exclusão -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Exclusão</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelDelete">Cancelar</button>
+                <button class="btn btn-danger" id="confirmDelete">Excluir</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos
+            const addUserBtn = document.getElementById('addUserBtn');
+            const userModal = document.getElementById('userModal');
+            const deleteModal = document.getElementById('deleteModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const userForm = document.getElementById('userForm');
+            const cancelUserForm = document.getElementById('cancelUserForm');
+            const editButtons = document.querySelectorAll('.btn-edit');
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+            const cancelDelete = document.getElementById('cancelDelete');
+            const confirmDelete = document.getElementById('confirmDelete');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            const overlay = document.querySelector('.overlay');
+            
+            // Variáveis globais
+            let currentUserId = null;
+            
+            // Funções para manipular modais
+            function openModal(modal) {
+                modal.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            function closeModal(modal) {
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            function closeAllModals() {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                overlay.classList.remove('active');
+            }
+            
+            // Evento para abrir modal de adicionar usuário
+            if (addUserBtn) {
+                addUserBtn.addEventListener('click', function() {
+                    // Reset form
+                    userForm.reset();
+                    modalTitle.textContent = 'Adicionar Usuário';
+                    currentUserId = null;
+                    
+                    // Mostrar modal
+                    openModal(userModal);
+                });
+            }
+            
+            // Eventos para botões de editar
+            if (editButtons.length > 0) {
+                editButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const row = this.closest('tr');
+                        const id = row.cells[0].textContent;
+                        const nome = row.cells[1].textContent.split(' ')[0];
+                        const sobrenome = row.cells[1].textContent.split(' ').slice(1).join(' ');
+                        const email = row.cells[2].textContent;
+                        const telefone = row.cells[3].textContent;
+                        const status = row.cells[5].querySelector('.status-badge').textContent.toLowerCase();
+                        
+                        // Preencher formulário
+                        document.getElementById('nome').value = nome;
+                        document.getElementById('sobrenome').value = sobrenome;
+                        document.getElementById('email').value = email;
+                        document.getElementById('telefone').value = telefone;
+                        document.getElementById('status').value = status;
+                        
+                        // Campos de senha - deixar em branco na edição
+                        document.getElementById('senha').value = '';
+                        document.getElementById('confirmar_senha').value = '';
+                        
+                        // Atualizar título e ID atual
+                        modalTitle.textContent = 'Editar Usuário';
+                        currentUserId = id;
+                        
+                        // Mostrar modal
+                        openModal(userModal);
+                    });
+                });
+            }
+            
+            // Eventos para botões de excluir
+            if (deleteButtons.length > 0) {
+                deleteButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const row = this.closest('tr');
+                        const id = row.cells[0].textContent;
+                        currentUserId = id;
+                        
+                        // Mostrar modal de confirmação
+                        openModal(deleteModal);
+                    });
+                });
+            }
+            
+            // Evento de submit do formulário
+            if (userForm) {
+                userForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Validar senhas
+                    const senha = document.getElementById('senha').value;
+                    const confirmarSenha = document.getElementById('confirmar_senha').value;
+                    
+                    if (senha !== confirmarSenha) {
+                        alert('As senhas não coincidem!');
+                        return;
+                    }
+                    
+                    // Aqui você faria a chamada AJAX para salvar os dados
+                    console.log('Salvando usuário:', currentUserId ? 'Editar' : 'Novo');
+                    
+                    // Fechar modal
+                    closeModal(userModal);
+                    
+                    // Simulação de sucesso (remover em produção)
+                    alert(currentUserId ? 'Usuário atualizado com sucesso!' : 'Usuário adicionado com sucesso!');
+                });
+            }
+            
+            // Eventos para fechar modais
+            if (cancelUserForm) cancelUserForm.addEventListener('click', () => closeModal(userModal));
+            if (cancelDelete) cancelDelete.addEventListener('click', () => closeModal(deleteModal));
+            if (confirmDelete) {
+                confirmDelete.addEventListener('click', function() {
+                    // Aqui você faria a chamada AJAX para excluir o usuário
+                    console.log('Excluindo usuário:', currentUserId);
+                    
+                    // Fechar modal
+                    closeModal(deleteModal);
+                    
+                    // Simulação de sucesso (remover em produção)
+                    alert('Usuário excluído com sucesso!');
+                });
+            }
+            
+            // Fechar modais com botão X
+            if (closeModalButtons.length > 0) {
+                closeModalButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        closeAllModals();
+                    });
+                });
+            }
+            
+            // Fechar modais clicando no overlay
+            if (overlay) {
+                overlay.addEventListener('click', closeAllModals);
+            }
+            
+            // Máscara para telefone
+            const telefoneInput = document.getElementById('telefone');
+            
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    if (value.length > 0) {
+                        // Formato: (00) 00000-0000
+                        if (value.length <= 2) {
+                            value = `(${value}`;
+                        } else if (value.length <= 7) {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+                        } else if (value.length <= 11) {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
+                        } else {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7, 11)}`;
+                        }
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

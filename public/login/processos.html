@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhar Processos | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para página de acompanhamento de processos */
+        .processos-container {
+            margin: 20px 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .filter-form {
+            background-color: var(--light-bg);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+        
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .filter-item select,
+        .filter-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .accordion {
+            margin-bottom: 30px;
+        }
+        
+        .accordion-item {
+            margin-bottom: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .accordion-header {
+            background-color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .accordion-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+        
+        .accordion-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-primary {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .badge-warning {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .badge-danger {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .status-aguardando {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .status-pago {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-protocolado {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .status-baixado {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .status-refazer {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .progress-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-card {
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .progress-card.completed {
+            background-color: #e8f5e9;
+        }
+        
+        .progress-card.pending {
+            background-color: #fff8e1;
+        }
+        
+        .progress-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .progress-card.completed .progress-icon {
+            background-color: #2e7d32;
+            color: white;
+        }
+        
+        .progress-card.pending .progress-icon {
+            background-color: #f57c00;
+            color: white;
+        }
+        
+        .progress-card h4 {
+            margin: 0 0 5px;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .progress-card p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .progress-card.completed p.status {
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        
+        .progress-card.pending p.status {
+            color: #f57c00;
+            font-weight: 500;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .progress-label span {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .progress-label .percentage {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .progress-bar-bg {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .client-info {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .client-info h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            margin-bottom: 10px;
+        }
+        
+        .info-item label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 3px;
+        }
+        
+        .info-item span {
+            font-weight: 500;
+        }
+        
+        .process-timeline {
+            position: relative;
+            padding-left: 30px;
+            margin-top: 30px;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--border-color);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -30px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7rem;
+        }
+        
+        .timeline-item.completed .timeline-dot {
+            background-color: #2e7d32;
+        }
+        
+        .timeline-item.pending .timeline-dot {
+            background-color: #f57c00;
+        }
+        
+        .timeline-content {
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+        }
+        
+        .timeline-item.completed .timeline-content {
+            background-color: #e8f5e9;
+        }
+        
+        .timeline-item.pending .timeline-content {
+            background-color: #fff8e1;
+        }
+        
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .timeline-description {
+            font-size: 0.9rem;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .progress-cards {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-buttons {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="menu-dropdown">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Cadastrar Serviço</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="cadastro-cliente.html">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Cadastrar Cliente</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="meus-pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Meus Pedidos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="datas-listas.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Datas das Listas</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="processos.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Acompanhar Processos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Acompanhar Processos</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquisar processos...">
+                    <button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">2</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Carlos Silva</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="perfil.html">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Content Container -->
+        <div class="processos-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Acompanhamento de Processos</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Filtros -->
+                    <form class="filter-form">
+                        <div class="filter-item">
+                            <label for="filter-cliente">Cliente</label>
+                            <input type="text" id="filter-cliente" placeholder="Nome do cliente">
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label for="filter-servico">Serviço</label>
+                            <select id="filter-servico">
+                                <option value="">Todos os Serviços</option>
+                                <option value="consulta_completa">Consulta Completa</option>
+                                <option value="limpar_nome">Apenas Limpar Nome</option>
+                                <option value="rating_bancario">Apenas Rating Bancário</option>
+                                <option value="combo_limpar_score">Combo (Limpar nome e Aumento de Score)</option>
+                                <option value="combo_rating_limpar">Combo (Rating e Limpa Nome)</option>
+                                <option value="combo_rating_bacen">Combo (Rating Bancário e Bacen)</option>
+                                <option value="combo_completo">Combo (Limpar nome, Rating Bancário e Bacen)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label for="filter-status">Status</label>
+                            <select id="filter-status">
+                                <option value="">Todos os Status</option>
+                                <option value="aguardando_pagamento">Aguardando Pagamento</option>
+                                <option value="pago">Pago</option>
+                                <option value="processo_protocolado">Processo Protocolado</option>
+                                <option value="processo_baixado">Processo Baixado</option>
+                                <option value="refazer">Refazer</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter"></i> Filtrar
+                            </button>
+                            <button type="reset" class="btn btn-outline">
+                                <i class="fas fa-broom"></i> Limpar
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Processos em formato de acordeão -->
+                    <div class="accordion">
+                        <!-- Processo #1 -->
+                        <div class="accordion-item active">
+                            <div class="accordion-header">
+                                <h3>
+                                    <i class="fas fa-file-alt"></i>
+                                    João Pereira - Limpar Nome
+                                    <span class="status-badge status-protocolado">Processo Protocolado</span>
+                                </h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Informações do Cliente -->
+                                <div class="client-info">
+                                    <h4>Informações do Cliente</h4>
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label>Nome:</label>
+                                            <span>João Pereira</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>CPF:</label>
+                                            <span>123.456.789-00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>E-mail:</label>
+                                            <span>joao.pereira@email.com</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Telefone:</label>
+                                            <span>(11) 98765-4321</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Serviço:</label>
+                                            <span>Apenas Limpar Nome</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Data do Pedido:</label>
+                                            <span>04/04/2025</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Valor:</label>
+                                            <span>R$ 300,00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Status:</label>
+                                            <span>Processo Protocolado</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Progresso do Processo -->
+                                <h4>Progresso do Processo</h4>
+                                <div class="progress-bar-container">
+                                    <div class="progress-label">
+                                        <span>Progresso Total</span>
+                                        <span class="percentage">60%</span>
+                                    </div>
+                                    <div class="progress-bar-bg">
+                                        <div class="progress-bar-fill" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cards de Status nos Órgãos -->
+                                <div class="progress-cards">
+                                    <div class="progress-card completed">
+                                        <div class="progress-icon">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <h4>Serasa</h4>
+                                        <p class="status">Concluído</p>
+                                        <p>05/04/2025</p>
+                                    </div>
+                                    
+                                    <div class="progress-card completed">
+                                        <div class="progress-icon">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <h4>SPC</h4>
+                                        <p class="status">Concluído</p>
+                                        <p>06/04/2025</p>
+                                    </div>
+                                    
+                                    <div class="progress-card pending">
+                                        <div class="progress-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <h4>BoaVista</h4>
+                                        <p class="status">Pendente</p>
+                                        <p>-</p>
+                                    </div>
+                                    
+                                    <div class="progress-card pending">
+                                        <div class="progress-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <h4>Cenprot SP</h4>
+                                        <p class="status">Pendente</p>
+                                        <p>-</p>
+                                    </div>
+                                    
+                                    <div class="progress-card pending">
+                                        <div class="progress-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <h4>Cenprot Nacional</h4>
+                                        <p class="status">Pendente</p>
+                                        <p>-</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Timeline do Processo -->
+                                <h4>Histórico do Processo</h4>
+                                <div class="process-timeline">
+                                    <div class="timeline-line"></div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">06/04/2025</div>
+                                            <div class="timeline-title">Remoção SPC Concluída</div>
+                                            <div class="timeline-description">
+                                                Restrição removida com sucesso do SPC Brasil.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">05/04/2025</div>
+                                            <div class="timeline-title">Remoção Serasa Concluída</div>
+                                            <div class="timeline-description">
+                                                Restrição removida com sucesso do Serasa Experian.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">05/04/2025</div>
+                                            <div class="timeline-title">Processo Protocolado</div>
+                                            <div class="timeline-description">
+                                                Processo protocolado em todos os órgãos de proteção ao crédito.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">04/04/2025</div>
+                                            <div class="timeline-title">Pagamento Confirmado</div>
+                                            <div class="timeline-description">
+                                                Pagamento do serviço confirmado.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">04/04/2025</div>
+                                            <div class="timeline-title">Pedido Cadastrado</div>
+                                            <div class="timeline-description">
+                                                Pedido de serviço cadastrado no sistema.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Processo #2 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>
+                                    <i class="fas fa-file-alt"></i>
+                                    Maria Oliveira - Combo (Limpar nome e Aumento de Score)
+                                    <span class="status-badge status-aguardando">Aguardando Pagamento</span>
+                                </h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Conteúdo seria similar ao anterior mas com dados diferentes -->
+                                <div class="client-info">
+                                    <h4>Informações do Cliente</h4>
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label>Nome:</label>
+                                            <span>Maria Oliveira</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>CPF:</label>
+                                            <span>987.654.321-00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Serviço:</label>
+                                            <span>Combo (Limpar nome e Aumento de Score)</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Data do Pedido:</label>
+                                            <span>08/04/2025</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Valor:</label>
+                                            <span>R$ 650,00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Status:</label>
+                                            <span>Aguardando Pagamento</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p>O processo será iniciado após a confirmação do pagamento.</p>
+                                
+                                <!-- Timeline do Processo -->
+                                <h4>Histórico do Processo</h4>
+                                <div class="process-timeline">
+                                    <div class="timeline-line"></div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">08/04/2025</div>
+                                            <div class="timeline-title">Pedido Cadastrado</div>
+                                            <div class="timeline-description">
+                                                Pedido de serviço cadastrado no sistema.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Processo #3 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>
+                                    <i class="fas fa-file-alt"></i>
+                                    Pedro Santos - Apenas Rating Bancário
+                                    <span class="status-badge status-pago">Pago</span>
+                                </h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Conteúdo seria similar ao anterior mas com dados diferentes -->
+                                <div class="client-info">
+                                    <h4>Informações do Cliente</h4>
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label>Nome:</label>
+                                            <span>Pedro Santos</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>CPF:</label>
+                                            <span>456.789.123-00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Serviço:</label>
+                                            <span>Apenas Rating Bancário</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Data do Pedido:</label>
+                                            <span>07/04/2025</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Valor:</label>
+                                            <span>R$ 450,00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Status:</label>
+                                            <span>Pago</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p>O processo está sendo analisado e será iniciado em breve.</p>
+                                
+                                <!-- Timeline do Processo -->
+                                <h4>Histórico do Processo</h4>
+                                <div class="process-timeline">
+                                    <div class="timeline-line"></div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">08/04/2025</div>
+                                            <div class="timeline-title">Pagamento Confirmado</div>
+                                            <div class="timeline-description">
+                                                Pagamento do serviço confirmado.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">07/04/2025</div>
+                                            <div class="timeline-title">Pedido Cadastrado</div>
+                                            <div class="timeline-description">
+                                                Pedido de serviço cadastrado no sistema.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Processo #4 -->
+                        <div class="accordion-item">
+                            <div class="accordion-header">
+                                <h3>
+                                    <i class="fas fa-file-alt"></i>
+                                    Ana Costa - Combo (Rating Bancário e Bacen)
+                                    <span class="status-badge status-baixado">Processo Baixado</span>
+                                </h3>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="accordion-content">
+                                <!-- Conteúdo seria similar ao anterior mas com dados diferentes e status concluído -->
+                                <div class="client-info">
+                                    <h4>Informações do Cliente</h4>
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label>Nome:</label>
+                                            <span>Ana Costa</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>CPF:</label>
+                                            <span>789.123.456-00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Serviço:</label>
+                                            <span>Combo (Rating Bancário e Bacen)</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Data do Pedido:</label>
+                                            <span>01/04/2025</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Valor:</label>
+                                            <span>R$ 850,00</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Status:</label>
+                                            <span>Processo Baixado</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Progresso do Processo -->
+                                <h4>Progresso do Processo</h4>
+                                <div class="progress-bar-container">
+                                    <div class="progress-label">
+                                        <span>Progresso Total</span>
+                                        <span class="percentage">100%</span>
+                                    </div>
+                                    <div class="progress-bar-bg">
+                                        <div class="progress-bar-fill" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                                
+                                <p style="color: #2e7d32; font-weight: 500; margin: 15px 0;">
+                                    <i class="fas fa-check-circle"></i> Processo concluído com sucesso!
+                                </p>
+                                
+                                <!-- Timeline do Processo -->
+                                <h4>Histórico do Processo</h4>
+                                <div class="process-timeline">
+                                    <div class="timeline-line"></div>
+                                    
+                                    <div class="timeline-item completed">
+                                        <div class="timeline-dot">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">06/04/2025</div>
+                                            <div class="timeline-title">Processo Finalizado</div>
+                                            <div class="timeline-description">
+                                                Todos os procedimentos foram concluídos com sucesso.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Mais entradas de timeline seriam adicionadas aqui -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Accordion functionality
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            
+            if (accordionHeaders.length > 0) {
+                accordionHeaders.forEach(header => {
+                    header.addEventListener('click', function() {
+                        // Toggle active class for this item
+                        const accordionItem = this.parentElement;
+                        accordionItem.classList.toggle('active');
+                        
+                        // Update chevron icon
+                        const icon = this.querySelector('.fas');
+                        if (accordionItem.classList.contains('active')) {
+                            icon.classList.remove('fa-chevron-down');
+                            icon.classList.add('fa-chevron-up');
+                        } else {
+                            icon.classList.remove('fa-chevron-up');
+                            icon.classList.add('fa-chevron-down');
+                        }
+                    });
+                });
+            }
+            
+            // Dropdown menus
+            const dropdownMenus = document.querySelectorAll('.menu-dropdown');
+            
+            if (dropdownMenus.length > 0) {
+                dropdownMenus.forEach(menu => {
+                    menu.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const submenu = this.nextElementSibling;
+                        submenu.classList.toggle('active');
+                        const icon = this.querySelector('.dropdown-icon');
+                        icon.classList.toggle('rotate');
+                    });
+                });
+            }
+            
+            // Adicionar submenu estilização
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    .submenu {
+                        display: none;
+                        padding-left: 35px;
+                        margin-top: 5px;
+                    }
+                    
+                    .submenu.active {
+                        display: block;
+                    }
+                    
+                    .dropdown-icon {
+                        transition: transform 0.3s ease;
+                        margin-left: auto;
+                    }
+                    
+                    .dropdown-icon.rotate {
+                        transform: rotate(180deg);
+                    }
+                </style>
+            `);
+        });
+    </script>
+</body>
+</html>

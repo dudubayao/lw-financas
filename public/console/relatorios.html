@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+    <style>
+        /* Estilos específicos para página de relatórios */
+        .relatorios-container {
+            margin: 20px 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .filter-item select,
+        .filter-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-box {
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            height: 400px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .chart-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: var(--transition);
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--border-color);
+            color: var(--text-color);
+        }
+        
+        .report-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .report-tab {
+            padding: 10px 20px;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .report-tab.active {
+            color: var(--primary-color);
+        }
+        
+        .report-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .report-tab.active::after {
+            width: 100%;
+        }
+        
+        .report-tab:hover {
+            color: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .data-table td {
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        
+        .download-options {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-buttons {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pedidos de Revendedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listas.html">
+                        <i class="fas fa-list-alt"></i>
+                        <span>Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="valores.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Valores dos Serviços</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Relatórios</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Administrador</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Relatórios Container -->
+        <div class="relatorios-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Filtros de Relatório</h2>
+                </div>
+                <div class="card-body">
+                    <div class="filter-row">
+                        <div class="filter-item">
+                            <label for="periodo">Período</label>
+                            <select id="periodo">
+                                <option value="7d">Últimos 7 dias</option>
+                                <option value="30d" selected>Últimos 30 dias</option>
+                                <option value="3m">Últimos 3 meses</option>
+                                <option value="6m">Últimos 6 meses</option>
+                                <option value="1a">Último ano</option>
+                                <option value="custom">Personalizado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-item" id="data-inicio-container" style="display: none;">
+                            <label for="data-inicio">Data Inicial</label>
+                            <input type="date" id="data-inicio">
+                        </div>
+                        
+                        <div class="filter-item" id="data-fim-container" style="display: none;">
+                            <label for="data-fim">Data Final</label>
+                            <input type="date" id="data-fim">
+                        </div>
+                        
+                        <div class="filter-item">
+                            <label for="revendedor">Revendedor</label>
+                            <select id="revendedor">
+                                <option value="">Todos os Revendedores</option>
+                                <option value="1">Carlos Silva</option>
+                                <option value="2">Maria Santos</option>
+                                <option value="3">João Oliveira</option>
+                                <option value="4">Ana Souza</option>
+                                <option value="5">Pedro Lima</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-buttons">
+                            <button class="btn btn-primary" id="filtrarRelatorio">
+                                <i class="fas fa-filter"></i> Aplicar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Resumo Financeiro</h2>
+                    <div>
+                        <button class="btn btn-outline" id="exportar-resumo-btn">
+                            <i class="fas fa-file-export"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="report-grid">
+                        <div class="stat-box">
+                            <div class="stat-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="stat-value">R$ 184.270,00</div>
+                            <div class="stat-label">Receita Total</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-icon" style="background-color: #28a745;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-value">R$ 145.850,00</div>
+                            <div class="stat-label">Total Pago</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-icon" style="background-color: #ffc107;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-value">R$ 38.420,00</div>
+                            <div class="stat-label">Total Pendente</div>
+                        </div>
+                        
+                        <div class="stat-box">
+                            <div class="stat-icon" style="background-color: #6f42c1;">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-value">79,2%</div>
+                            <div class="stat-label">Taxa de Conversão</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-actions">
+                        <button class="btn-icon" data-action="download" data-chart="revenueChart">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn-icon" data-action="expand" data-chart="revenueChart">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Relatórios Detalhados</h2>
+                </div>
+                <div class="card-body">
+                    <div class="report-tabs">
+                        <div class="report-tab active" data-tab="vendas">Vendas por Serviço</div>
+                        <div class="report-tab" data-tab="revendedores">Desempenho de Revendedores</div>
+                        <div class="report-tab" data-tab="status">Status de Processos</div>
+                    </div>
+                    
+                    <!-- Aba: Vendas por Serviço -->
+                    <div class="tab-content active" id="tab-vendas">
+                        <div class="chart-container">
+                            <canvas id="servicosChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-actions">
+                            <button class="btn-icon" data-action="download" data-chart="servicosChart">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn-icon" data-action="expand" data-chart="servicosChart">
+                                <i class="fas fa-expand-alt"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="table-container" style="margin-top: 30px;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Serviço</th>
+                                        <th>Quantidade</th>
+                                        <th>Valor Total</th>
+                                        <th>Valor Médio</th>
+                                        <th>% da Receita</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Consulta Completa</td>
+                                        <td>42</td>
+                                        <td>R$ 14.700,00</td>
+                                        <td>R$ 350,00</td>
+                                        <td>8,0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Limpar Nome</td>
+                                        <td>75</td>
+                                        <td>R$ 22.500,00</td>
+                                        <td>R$ 300,00</td>
+                                        <td>12,2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rating Bancário</td>
+                                        <td>60</td>
+                                        <td>R$ 27.000,00</td>
+                                        <td>R$ 450,00</td>
+                                        <td>14,7%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combo (Limpar nome e Aumento de Score)</td>
+                                        <td>54</td>
+                                        <td>R$ 35.100,00</td>
+                                        <td>R$ 650,00</td>
+                                        <td>19,0%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combo (Rating e Limpa Nome)</td>
+                                        <td>36</td>
+                                        <td>R$ 23.400,00</td>
+                                        <td>R$ 650,00</td>
+                                        <td>12,7%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combo (Rating Bancário e Bacen)</td>
+                                        <td>38</td>
+                                        <td>R$ 32.300,00</td>
+                                        <td>R$ 850,00</td>
+                                        <td>17,6%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Combo Completo</td>
+                                        <td>31</td>
+                                        <td>R$ 29.450,00</td>
+                                        <td>R$ 950,00</td>
+                                        <td>16,0%</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>336</th>
+                                        <th>R$ 184.270,00</th>
+                                        <th>R$ 548,42</th>
+                                        <th>100,0%</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <div class="download-options">
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-excel"></i> Exportar para Excel
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-pdf"></i> Exportar para PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Aba: Desempenho de Revendedores -->
+                    <div class="tab-content" id="tab-revendedores">
+                        <div class="chart-container">
+                            <canvas id="revendedoresChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-actions">
+                            <button class="btn-icon" data-action="download" data-chart="revendedoresChart">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn-icon" data-action="expand" data-chart="revendedoresChart">
+                                <i class="fas fa-expand-alt"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="table-container" style="margin-top: 30px;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Revendedor</th>
+                                        <th>Vendas</th>
+                                        <th>Valor Total</th>
+                                        <th>Ticket Médio</th>
+                                        <th>Taxa de Conversão</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Carlos Silva</td>
+                                        <td>84</td>
+                                        <td>R$ 48.320,00</td>
+                                        <td>R$ 575,24</td>
+                                        <td>82,4%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Maria Santos</td>
+                                        <td>71</td>
+                                        <td>R$ 38.740,00</td>
+                                        <td>R$ 545,63</td>
+                                        <td>78,9%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>João Oliveira</td>
+                                        <td>65</td>
+                                        <td>R$ 35.980,00</td>
+                                        <td>R$ 553,54</td>
+                                        <td>75,6%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ana Souza</td>
+                                        <td>61</td>
+                                        <td>R$ 31.780,00</td>
+                                        <td>R$ 521,00</td>
+                                        <td>77,1%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pedro Lima</td>
+                                        <td>55</td>
+                                        <td>R$ 29.450,00</td>
+                                        <td>R$ 535,45</td>
+                                        <td>80,0%</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>336</th>
+                                        <th>R$ 184.270,00</th>
+                                        <th>R$ 548,42</th>
+                                        <th>79,2%</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <div class="download-options">
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-excel"></i> Exportar para Excel
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-pdf"></i> Exportar para PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Aba: Status de Processos -->
+                    <div class="tab-content" id="tab-status">
+                        <div class="chart-container">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                        
+                        <div class="chart-actions">
+                            <button class="btn-icon" data-action="download" data-chart="statusChart">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn-icon" data-action="expand" data-chart="statusChart">
+                                <i class="fas fa-expand-alt"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="table-container" style="margin-top: 30px;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Quantidade</th>
+                                        <th>% do Total</th>
+                                        <th>Valor Total</th>
+                                        <th>Tempo Médio de Resolução</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Aguardando Pagamento</td>
+                                        <td>45</td>
+                                        <td>13,4%</td>
+                                        <td>R$ 23.850,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pago</td>
+                                        <td>120</td>
+                                        <td>35,7%</td>
+                                        <td>R$ 67.800,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Processo Protocolado</td>
+                                        <td>85</td>
+                                        <td>25,3%</td>
+                                        <td>R$ 46.240,00</td>
+                                        <td>7 dias</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Processo Baixado</td>
+                                        <td>71</td>
+                                        <td>21,1%</td>
+                                        <td>R$ 38.980,00</td>
+                                        <td>32 dias</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Refazer</td>
+                                        <td>15</td>
+                                        <td>4,5%</td>
+                                        <td>R$ 7.400,00</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total</th>
+                                        <th>336</th>
+                                        <th>100,0%</th>
+                                        <th>R$ 184.270,00</th>
+                                        <th>-</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        
+                        <div class="download-options">
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-excel"></i> Exportar para Excel
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-file-pdf"></i> Exportar para PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Expandir Gráfico -->
+    <div class="modal" id="expandChartModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 id="expandedChartTitle">Gráfico Expandido</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="height: 500px; position: relative;">
+                    <canvas id="expandedChart"></canvas>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeExpandModal">Fechar</button>
+                <button class="btn btn-primary" id="downloadExpandedChart">
+                    <i class="fas fa-download"></i> Salvar Imagem
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const periodoSelect = document.getElementById('periodo');
+            const dataInicioContainer = document.getElementById('data-inicio-container');
+            const dataFimContainer = document.getElementById('data-fim-container');
+            const reportTabs = document.querySelectorAll('.report-tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const chartActions = document.querySelectorAll('.chart-actions .btn-icon');
+            const expandChartModal = document.getElementById('expandChartModal');
+            const expandedChartTitle = document.getElementById('expandedChartTitle');
+            const expandedChartCanvas = document.getElementById('expandedChart');
+            const downloadExpandedChart = document.getElementById('downloadExpandedChart');
+            const closeExpandModal = document.getElementById('closeExpandModal');
+            const overlay = document.querySelector('.overlay');
+            
+            // Mostrar/esconder campos de data personalizada
+            if (periodoSelect) {
+                periodoSelect.addEventListener('change', function() {
+                    if (this.value === 'custom') {
+                        dataInicioContainer.style.display = 'block';
+                        dataFimContainer.style.display = 'block';
+                    } else {
+                        dataInicioContainer.style.display = 'none';
+                        dataFimContainer.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Alternar entre abas
+            if (reportTabs.length > 0) {
+                reportTabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        // Remover classe ativa de todas as abas e conteúdos
+                        reportTabs.forEach(t => t.classList.remove('active'));
+                        tabContents.forEach(c => c.classList.remove('active'));
+                        
+                        // Adicionar classe ativa à aba clicada
+                        this.classList.add('active');
+                        
+                        // Mostrar conteúdo correspondente
+                        const tabId = `tab-${this.getAttribute('data-tab')}`;
+                        document.getElementById(tabId).classList.add('active');
+                    });
+                });
+            }
+            
+            // Funções para manipular modais
+            function openModal(modal) {
+                modal.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            function closeModal(modal) {
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            function closeAllModals() {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                overlay.classList.remove('active');
+            }
+            
+            // Ações para botões de gráficos (download/expandir)
+            if (chartActions.length > 0) {
+                chartActions.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const action = this.getAttribute('data-action');
+                        const chartId = this.getAttribute('data-chart');
+                        const chartCanvas = document.getElementById(chartId);
+                        
+                        if (action === 'download' && chartCanvas) {
+                            // Baixar gráfico como imagem
+                            const link = document.createElement('a');
+                            link.download = `${chartId}-${new Date().toISOString().slice(0, 10)}.png`;
+                            link.href = chartCanvas.toDataURL('image/png', 1.0);
+                            link.click();
+                        } else if (action === 'expand' && chartCanvas) {
+                            // Expandir gráfico em um modal
+                            let chartTitle = '';
+                            
+                            switch (chartId) {
+                                case 'revenueChart':
+                                    chartTitle = 'Receita por Período';
+                                    break;
+                                case 'servicosChart':
+                                    chartTitle = 'Vendas por Serviço';
+                                    break;
+                                case 'revendedoresChart':
+                                    chartTitle = 'Desempenho de Revendedores';
+                                    break;
+                                case 'statusChart':
+                                    chartTitle = 'Status de Processos';
+                                    break;
+                                default:
+                                    chartTitle = 'Gráfico Expandido';
+                            }
+                            
+                            expandedChartTitle.textContent = chartTitle;
+                            
+                            // Clonar gráfico para o modal
+                            const originalChart = Chart.getChart(chartId);
+                            
+                            // Abrir o modal primeiro
+                            openModal(expandChartModal);
+                            
+                            // Criar uma cópia do gráfico no modal
+                            setTimeout(() => {
+                                new Chart(expandedChartCanvas, {
+                                    type: originalChart.config.type,
+                                    data: JSON.parse(JSON.stringify(originalChart.data)),
+                                    options: JSON.parse(JSON.stringify(originalChart.config.options))
+                                });
+                            }, 100);
+                        }
+                    });
+                });
+            }
+            
+            // Fechar modal de gráfico expandido
+            if (closeExpandModal) {
+                closeExpandModal.addEventListener('click', function() {
+                    closeModal(expandChartModal);
+                });
+            }
+            
+            // Baixar gráfico expandido
+            if (downloadExpandedChart) {
+                downloadExpandedChart.addEventListener('click', function() {
+                    const link = document.createElement('a');
+                    link.download = `chart-${new Date().toISOString().slice(0, 10)}.png`;
+                    link.href = expandedChartCanvas.toDataURL('image/png', 1.0);
+                    link.click();
+                });
+            }
+            
+            // Fechar modais com botão X
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            if (closeModalButtons.length > 0) {
+                closeModalButtons.forEach(btn => {
+                    btn.addEventListener('click', closeAllModals);
+                });
+            }
+            
+            // Fechar modais clicando no overlay
+            if (overlay) {
+                overlay.addEventListener('click', closeAllModals);
+            }
+            
+            // Inicializar gráficos
+            // Gráfico de Receita
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                        datasets: [{
+                            label: 'Receita Total (R$)',
+                            data: [12500, 17800, 18300, 21450, 19800, 23500, 25200, 26800, 24300, 28100, 29500, 31200],
+                            backgroundColor: 'rgba(22, 71, 133, 0.1)',
+                            borderColor: '#164785',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#164785',
+                            pointRadius: 4,
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                padding: 10,
+                                cornerRadius: 5,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    drawBorder: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'R$ ' + value.toLocaleString('pt-BR');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico de Serviços
+            const servicosCtx = document.getElementById('servicosChart');
+            if (servicosCtx) {
+                new Chart(servicosCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            'Consulta Completa',
+                            'Limpar Nome',
+                            'Rating Bancário',
+                            'Combo (Limpar nome e Score)',
+                            'Combo (Rating e Limpa Nome)',
+                            'Combo (Rating e Bacen)',
+                            'Combo Completo'
+                        ],
+                        datasets: [{
+                            data: [14700, 22500, 27000, 35100, 23400, 32300, 29450],
+                            backgroundColor: [
+                                '#0a2f5c',
+                                '#164785',
+                                '#2d7dd2',
+                                '#f2d675',
+                                '#D4AF37',
+                                '#ba9121',
+                                '#97731a'
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 15
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    boxWidth: 15,
+                                    padding: 15,
+                                    font: {
+                                        size: 11
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                padding: 10,
+                                cornerRadius: 5,
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.raw);
+                                        const percentage = ((context.raw / 184270) * 100).toFixed(1) + '%';
+                                        return `${label}: ${value} (${percentage})`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico de Revendedores
+            const revendedoresCtx = document.getElementById('revendedoresChart');
+            if (revendedoresCtx) {
+                new Chart(revendedoresCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Carlos Silva', 'Maria Santos', 'João Oliveira', 'Ana Souza', 'Pedro Lima'],
+                        datasets: [{
+                            label: 'Vendas (R$)',
+                            data: [48320, 38740, 35980, 31780, 29450],
+                            backgroundColor: '#164785',
+                            borderWidth: 0,
+                            borderRadius: 5,
+                            maxBarThickness: 50
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                padding: 10,
+                                cornerRadius: 5,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'R$ ' + value.toLocaleString('pt-BR');
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Gráfico de Status
+            const statusCtx = document.getElementById('statusChart');
+            if (statusCtx) {
+                new Chart(statusCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            'Aguardando Pagamento',
+                            'Pago',
+                            'Processo Protocolado',
+                            'Processo Baixado',
+                            'Refazer'
+                        ],
+                        datasets: [{
+                            label: 'Quantidade',
+                            data: [45, 120, 85, 71, 15],
+                            backgroundColor: [
+                                '#ffc107',
+                                '#28a745',
+                                '#17a2b8',
+                                '#6f42c1',
+                                '#dc3545'
+                            ],
+                            borderWidth: 0,
+                            borderRadius: 5,
+                            maxBarThickness: 50
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                padding: 10,
+                                cornerRadius: 5
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    drawBorder: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

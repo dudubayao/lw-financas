@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datas das Listas | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para página de datas das listas */
+        .content-container {
+            margin: 20px 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .listas-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .tab-item {
+            padding: 12px 20px;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .tab-item.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .calendario-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .mes-card {
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+        }
+        
+        .mes-header {
+            text-align: center;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .mes-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .calendario {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .calendario th {
+            padding: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .calendario td {
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .dia {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .dia:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .dia.hoje {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .dia.tem-lista {
+            position: relative;
+        }
+        
+        .dia.tem-lista::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        
+        .dia.feriado {
+            color: var(--danger-color);
+        }
+        
+        .dia.outro-mes {
+            color: var(--text-light);
+            opacity: 0.4;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .data-table td {
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .badge-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .badge-warning {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .badge-danger {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .badge-info {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-primary {
+            background-color: #ede7f6;
+            color: #5e35b1;
+        }
+        
+        .lista-details {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            display: none;
+        }
+        
+        .lista-details.active {
+            display: block;
+        }
+        
+        .lista-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .lista-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .lista-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-item label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .info-item .value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            color: var(--border-color);
+            margin-bottom: 15px;
+        }
+        
+        .empty-state-message {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" class="menu-dropdown">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Cadastrar Serviço</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                    </a>
+                    <ul class="submenu">
+                        <li>
+                            <a href="cadastro-cliente.html">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Cadastrar Cliente</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="meus-pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Meus Pedidos</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="datas-listas.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Datas das Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="processos.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Acompanhar Processos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Datas das Listas</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquisar listas...">
+                    <button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">2</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Carlos Silva</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="perfil.html">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Content Container -->
+        <div class="content-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Calendário de Listas</h2>
+                </div>
+                <div class="card-body">
+                    <div class="listas-tabs">
+                        <div class="tab-item active" data-tab="calendario">Calendário</div>
+                        <div class="tab-item" data-tab="todas-listas">Todas as Listas</div>
+                        <div class="tab-item" data-tab="minhas-listas">Minhas Listas</div>
+                    </div>
+                    
+                    <!-- Tab de Calendário -->
+                    <div class="tab-content active" id="calendario-tab">
+                        <div class="calendario-container">
+                            <!-- Mês de Março -->
+                            <div class="mes-card">
+                                <div class="mes-header">
+                                    <h3>Março 2025</h3>
+                                </div>
+                                <table class="calendario">
+                                    <thead>
+                                        <tr>
+                                            <th>D</th>
+                                            <th>S</th>
+                                            <th>T</th>
+                                            <th>Q</th>
+                                            <th>Q</th>
+                                            <th>S</th>
+                                            <th>S</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="dia outro-mes">23</span></td>
+                                            <td><span class="dia outro-mes">24</span></td>
+                                            <td><span class="dia outro-mes">25</span></td>
+                                            <td><span class="dia outro-mes">26</span></td>
+                                            <td><span class="dia outro-mes">27</span></td>
+                                            <td><span class="dia outro-mes">28</span></td>
+                                            <td><span class="dia">1</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">2</span></td>
+                                            <td><span class="dia">3</span></td>
+                                            <td><span class="dia">4</span></td>
+                                            <td><span class="dia">5</span></td>
+                                            <td><span class="dia">6</span></td>
+                                            <td><span class="dia">7</span></td>
+                                            <td><span class="dia">8</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">9</span></td>
+                                            <td><span class="dia">10</span></td>
+                                            <td><span class="dia">11</span></td>
+                                            <td><span class="dia">12</span></td>
+                                            <td><span class="dia">13</span></td>
+                                            <td><span class="dia">14</span></td>
+                                            <td><span class="dia">15</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">16</span></td>
+                                            <td><span class="dia tem-lista">17</span></td>
+                                            <td><span class="dia">18</span></td>
+                                            <td><span class="dia">19</span></td>
+                                            <td><span class="dia">20</span></td>
+                                            <td><span class="dia">21</span></td>
+                                            <td><span class="dia">22</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">23</span></td>
+                                            <td><span class="dia">24</span></td>
+                                            <td><span class="dia tem-lista">25</span></td>
+                                            <td><span class="dia">26</span></td>
+                                            <td><span class="dia">27</span></td>
+                                            <td><span class="dia">28</span></td>
+                                            <td><span class="dia">29</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">30</span></td>
+                                            <td><span class="dia">31</span></td>
+                                            <td><span class="dia outro-mes">1</span></td>
+                                            <td><span class="dia outro-mes">2</span></td>
+                                            <td><span class="dia outro-mes">3</span></td>
+                                            <td><span class="dia outro-mes">4</span></td>
+                                            <td><span class="dia outro-mes">5</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Mês de Abril -->
+                            <div class="mes-card">
+                                <div class="mes-header">
+                                    <h3>Abril 2025</h3>
+                                </div>
+                                <table class="calendario">
+                                    <thead>
+                                        <tr>
+                                            <th>D</th>
+                                            <th>S</th>
+                                            <th>T</th>
+                                            <th>Q</th>
+                                            <th>Q</th>
+                                            <th>S</th>
+                                            <th>S</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="dia outro-mes">30</span></td>
+                                            <td><span class="dia outro-mes">31</span></td>
+                                            <td><span class="dia">1</span></td>
+                                            <td><span class="dia">2</span></td>
+                                            <td><span class="dia">3</span></td>
+                                            <td><span class="dia">4</span></td>
+                                            <td><span class="dia">5</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">6</span></td>
+                                            <td><span class="dia">7</span></td>
+                                            <td><span class="dia">8</span></td>
+                                            <td><span class="dia">9</span></td>
+                                            <td><span class="dia hoje">10</span></td>
+                                            <td><span class="dia tem-lista">11</span></td>
+                                            <td><span class="dia">12</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">13</span></td>
+                                            <td><span class="dia">14</span></td>
+                                            <td><span class="dia">15</span></td>
+                                            <td><span class="dia">16</span></td>
+                                            <td><span class="dia">17</span></td>
+                                            <td><span class="dia">18</span></td>
+                                            <td><span class="dia">19</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">20</span></td>
+                                            <td><span class="dia feriado">21</span></td>
+                                            <td><span class="dia">22</span></td>
+                                            <td><span class="dia">23</span></td>
+                                            <td><span class="dia">24</span></td>
+                                            <td><span class="dia tem-lista">25</span></td>
+                                            <td><span class="dia">26</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">27</span></td>
+                                            <td><span class="dia">28</span></td>
+                                            <td><span class="dia">29</span></td>
+                                            <td><span class="dia">30</span></td>
+                                            <td><span class="dia outro-mes">1</span></td>
+                                            <td><span class="dia outro-mes">2</span></td>
+                                            <td><span class="dia outro-mes">3</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Mês de Maio -->
+                            <div class="mes-card">
+                                <div class="mes-header">
+                                    <h3>Maio 2025</h3>
+                                </div>
+                                <table class="calendario">
+                                    <thead>
+                                        <tr>
+                                            <th>D</th>
+                                            <th>S</th>
+                                            <th>T</th>
+                                            <th>Q</th>
+                                            <th>Q</th>
+                                            <th>S</th>
+                                            <th>S</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><span class="dia outro-mes">27</span></td>
+                                            <td><span class="dia outro-mes">28</span></td>
+                                            <td><span class="dia outro-mes">29</span></td>
+                                            <td><span class="dia outro-mes">30</span></td>
+                                            <td><span class="dia">1</span></td>
+                                            <td><span class="dia">2</span></td>
+                                            <td><span class="dia">3</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">4</span></td>
+                                            <td><span class="dia">5</span></td>
+                                            <td><span class="dia">6</span></td>
+                                            <td><span class="dia">7</span></td>
+                                            <td><span class="dia">8</span></td>
+                                            <td><span class="dia tem-lista">9</span></td>
+                                            <td><span class="dia">10</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">11</span></td>
+                                            <td><span class="dia">12</span></td>
+                                            <td><span class="dia">13</span></td>
+                                            <td><span class="dia">14</span></td>
+                                            <td><span class="dia">15</span></td>
+                                            <td><span class="dia">16</span></td>
+                                            <td><span class="dia">17</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">18</span></td>
+                                            <td><span class="dia">19</span></td>
+                                            <td><span class="dia">20</span></td>
+                                            <td><span class="dia">21</span></td>
+                                            <td><span class="dia">22</span></td>
+                                            <td><span class="dia tem-lista">23</span></td>
+                                            <td><span class="dia">24</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="dia">25</span></td>
+                                            <td><span class="dia">26</span></td>
+                                            <td><span class="dia">27</span></td>
+                                            <td><span class="dia">28</span></td>
+                                            <td><span class="dia">29</span></td>
+                                            <td><span class="dia">30</span></td>
+                                            <td><span class="dia">31</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="section-header">
+                            <h3>Próximas Listas</h3>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Lista</th>
+                                        <th>Data</th>
+                                        <th>Órgão</th>
+                                        <th>Status</th>
+                                        <th>Seus Clientes</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="#" class="lista-link" data-lista="123">#123</a></td>
+                                        <td>11/04/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                        <td>5</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="lista-link" data-lista="124">#124</a></td>
+                                        <td>25/04/2025</td>
+                                        <td>Bacen + Rating Bancário</td>
+                                        <td><span class="badge badge-primary">Em Preparação</span></td>
+                                        <td>3</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="lista-link" data-lista="125">#125</a></td>
+                                        <td>09/05/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-primary">Em Preparação</span></td>
+                                        <td>2</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="lista-link" data-lista="126">#126</a></td>
+                                        <td>23/05/2025</td>
+                                        <td>Bacen + Rating Bancário</td>
+                                        <td><span class="badge badge-primary">Em Preparação</span></td>
+                                        <td>0</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Detalhes da Lista (oculto inicialmente) -->
+                        <div class="lista-details" id="lista-details">
+                            <div class="lista-header">
+                                <h3>Detalhes da Lista <span id="lista-id">#123</span></h3>
+                                <button class="btn btn-sm btn-outline" id="fechar-detalhes">
+                                    <i class="fas fa-times"></i> Fechar
+                                </button>
+                            </div>
+                            
+                            <div class="lista-info">
+                                <div class="info-item">
+                                    <label>Data de Envio</label>
+                                    <div class="value">11/04/2025</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Órgãos</label>
+                                    <div class="value">Serasa + SPC + Boavista</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Status</label>
+                                    <div class="value"><span class="badge badge-warning">Aguardando Envio</span></div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Total de Clientes</label>
+                                    <div class="value">42</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Seus Clientes</label>
+                                    <div class="value">5</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Previsão de Retorno</label>
+                                    <div class="value">25/04/2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="section-header">
+                                <h4>Seus Clientes nesta Lista</h4>
+                            </div>
+                            
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <th>CPF/CNPJ</th>
+                                            <th>Serviço</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>João Pereira</td>
+                                            <td>123.456.789-00</td>
+                                            <td>Limpar Nome</td>
+                                            <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Maria Oliveira</td>
+                                            <td>987.654.321-00</td>
+                                            <td>Combo (Limpar Nome + Score)</td>
+                                            <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pedro Santos</td>
+                                            <td>456.789.123-00</td>
+                                            <td>Limpar Nome</td>
+                                            <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ana Costa</td>
+                                            <td>789.123.456-00</td>
+                                            <td>Combo (Rating + Limpa Nome)</td>
+                                            <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Roberto Lima</td>
+                                            <td>321.654.987-00</td>
+                                            <td>Limpar Nome</td>
+                                            <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab de Todas as Listas -->
+                    <div class="tab-content" id="todas-listas-tab">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Lista</th>
+                                        <th>Data</th>
+                                        <th>Órgão</th>
+                                        <th>Status</th>
+                                        <th>Total Clientes</th>
+                                        <th>Seus Clientes</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#123</td>
+                                        <td>11/04/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                        <td>42</td>
+                                        <td>5</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#122</td>
+                                        <td>25/03/2025</td>
+                                        <td>Bacen + Rating Bancário</td>
+                                        <td><span class="badge badge-success">Concluída</span></td>
+                                        <td>38</td>
+                                        <td>3</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#121</td>
+                                        <td>17/03/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-success">Concluída</span></td>
+                                        <td>45</td>
+                                        <td>6</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#120</td>
+                                        <td>10/03/2025</td>
+                                        <td>Bacen + Rating Bancário</td>
+                                        <td><span class="badge badge-success">Concluída</span></td>
+                                        <td>36</td>
+                                        <td>2</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#119</td>
+                                        <td>25/02/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-success">Concluída</span></td>
+                                        <td>40</td>
+                                        <td>4</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab de Minhas Listas -->
+                    <div class="tab-content" id="minhas-listas-tab">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Lista</th>
+                                        <th>Data</th>
+                                        <th>Órgão</th>
+                                        <th>Status</th>
+                                        <th>Seus Clientes</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#123</td>
+                                        <td>11/04/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-warning">Aguardando Envio</span></td>
+                                        <td>5</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#121</td>
+                                        <td>17/03/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-success">Concluída</span></td>
+                                        <td>6</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>#119</td>
+                                        <td>25/02/2025</td>
+                                        <td>Serasa + SPC + Boavista</td>
+                                        <td><span class="badge badge-success">Concluída</span></td>
+                                        <td>4</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline">
+                                                <i class="fas fa-eye"></i> Ver Detalhes
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tabs functionality
+            const tabItems = document.querySelectorAll('.tab-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabItems.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabItems.forEach(item => item.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    this.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Lista details functionality
+            const listaLinks = document.querySelectorAll('.lista-link');
+            const listaDetails = document.getElementById('lista-details');
+            const listaId = document.getElementById('lista-id');
+            const fecharDetalhes = document.getElementById('fechar-detalhes');
+            
+            listaLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const id = this.getAttribute('data-lista');
+                    listaId.textContent = `#${id}`;
+                    listaDetails.classList.add('active');
+                    
+                    // Scroll to details
+                    listaDetails.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            if (fecharDetalhes) {
+                fecharDetalhes.addEventListener('click', function() {
+                    listaDetails.classList.remove('active');
+                });
+            }
+            
+            // Dropdown menus
+            const dropdownMenus = document.querySelectorAll('.menu-dropdown');
+            
+            if (dropdownMenus.length > 0) {
+                dropdownMenus.forEach(menu => {
+                    menu.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const submenu = this.nextElementSibling;
+                        submenu.classList.toggle('active');
+                        const icon = this.querySelector('.dropdown-icon');
+                        icon.classList.toggle('rotate');
+                    });
+                });
+            }
+            
+            // User dropdown
+            const userBtn = document.querySelector('.user-btn');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            
+            if (userBtn && dropdownMenu) {
+                userBtn.addEventListener('click', function() {
+                    dropdownMenu.classList.toggle('active');
+                });
+                
+                // Fechar dropdown ao clicar fora
+                document.addEventListener('click', function(e) {
+                    if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Adicionar submenu estilização
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    .submenu {
+                        display: none;
+                        padding-left: 35px;
+                        margin-top: 5px;
+                    }
+                    
+                    .submenu.active {
+                        display: block;
+                    }
+                    
+                    .dropdown-icon {
+                        transition: transform 0.3s ease;
+                        margin-left: auto;
+                    }
+                    
+                    .dropdown-icon.rotate {
+                        transform: rotate(180deg);
+                    }
+                </style>
+            `);
+        });
+    </script>
+</body>
+</html>

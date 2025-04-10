@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Cliente | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para página de cadastro de cliente */
+        .content-container {
+            margin: 20px 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .form-group label .required {
+            color: var(--danger-color);
+            margin-left: 3px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(22, 71, 133, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-grid-full {
+            grid-column: span 2;
+        }
+        
+        .form-section-title {
+            grid-column: span 2;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 7px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .recent-clients {
+            margin-top: 30px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .data-table td {
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .btn-view {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .btn-view:hover {
+            background-color: #bbdefb;
+        }
+        
+        .btn-edit {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .btn-edit:hover {
+            background-color: #ffecb3;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            color: var(--border-color);
+            margin-bottom: 15px;
+        }
+        
+        .empty-state-message {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid-full,
+            .form-section-title {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="javascript:void(0);" class="menu-dropdown">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Cadastrar Serviço</span>
+                        <i class="fas fa-chevron-down dropdown-icon rotate"></i>
+                    </a>
+                    <ul class="submenu active">
+                        <li class="active">
+                            <a href="cadastro-cliente.html">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Cadastrar Cliente</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="meus-pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Meus Pedidos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="datas-listas.html">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Datas das Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="processos.html">
+                        <i class="fas fa-tasks"></i>
+                        <span>Acompanhar Processos</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="perfil.html">
+                        <i class="fas fa-user"></i>
+                        <span>Meu Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Cadastrar Cliente</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquisar clientes...">
+                    <button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">2</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Carlos Silva</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="perfil.html">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Content Container -->
+        <div class="content-container">
+            <!-- Formulário de Cadastro -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Cadastrar Novo Cliente</h2>
+                </div>
+                <div class="card-body">
+                    <form id="clientForm">
+                        <div class="form-grid">
+                            <div class="form-section-title">Informações do Cliente</div>
+                            
+                            <div class="form-group">
+                                <label for="situacao">
+                                    Situação
+                                    <span class="required">*</span>
+                                </label>
+                                <select id="situacao" name="situacao" required>
+                                    <option value="">Selecione uma situação</option>
+                                    <option value="aguardando_pagamento">Aguardando pagamento</option>
+                                    <option value="refazer">Refazer</option>
+                                    <option value="negociando">Negociando</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="tipo_documento">
+                                    Tipo de Documento
+                                    <span class="required">*</span>
+                                </label>
+                                <select id="tipo_documento" name="tipo_documento" required>
+                                    <option value="cpf">CPF</option>
+                                    <option value="cnpj">CNPJ</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="documento">
+                                    CPF/CNPJ
+                                    <span class="required">*</span>
+                                </label>
+                                <input type="text" id="documento" name="documento" placeholder="Digite apenas números" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="nome">
+                                    Nome Completo / Razão Social
+                                    <span class="required">*</span>
+                                </label>
+                                <input type="text" id="nome" name="nome" required>
+                            </div>
+                            
+                            <div class="form-section-title">Dados de Contato</div>
+                            
+                            <div class="form-group">
+                                <label for="email">E-mail</label>
+                                <input type="email" id="email" name="email" placeholder="email@exemplo.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="telefone">Telefone</label>
+                                <input type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000">
+                            </div>
+                            
+                            <div class="form-section-title">Detalhes do Serviço</div>
+                            
+                            <div class="form-group">
+                                <label for="servico">
+                                    Serviço Contratado
+                                    <span class="required">*</span>
+                                </label>
+                                <select id="servico" name="servico" required>
+                                    <option value="">Selecione um serviço</option>
+                                    <option value="consulta_completa">Consulta Completa</option>
+                                    <option value="limpar_nome">Apenas Limpar Nome</option>
+                                    <option value="rating_bancario">Apenas Rating Bancário</option>
+                                    <option value="combo_limpar_score">Combo (Limpar nome e Aumento de Score)</option>
+                                    <option value="combo_rating_limpar">Combo (Rating e Limpa Nome)</option>
+                                    <option value="combo_rating_bacen">Combo (Rating Bancário e Bacen)</option>
+                                    <option value="combo_completo">Combo (Limpar nome, Rating Bancário e Bacen)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="valor">Valor da Venda</label>
+                                <input type="text" id="valor" name="valor" readonly>
+                            </div>
+                            
+                            <div class="form-group form-grid-full">
+                                <label for="observacoes">Observações</label>
+                                <textarea id="observacoes" name="observacoes" placeholder="Informações adicionais sobre o cliente ou processo..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="cancelBtn">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Adicionar Cliente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Clientes Recentes -->
+            <div class="card recent-clients">
+                <div class="card-header">
+                    <h2>Clientes Cadastrados Recentemente</h2>
+                    <a href="meus-pedidos.html" class="btn-text">Ver Todos</a>
+                </div>
+                <div class="card-body">
+                    <div id="clientesContainer">
+                        <!-- Container para listar clientes (inicialmente vazio) -->
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="empty-state-message">
+                                Você ainda não cadastrou nenhum cliente.
+                            </div>
+                        </div>
+                        
+                        <!-- Tabela de clientes (mostrada apenas quando houver clientes) -->
+                        <div class="table-container" id="clientesTable" style="display: none;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>CPF/CNPJ</th>
+                                        <th>Serviço</th>
+                                        <th>Data</th>
+                                        <th>Status</th>
+                                        <th>Valor</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientesTableBody">
+                                    <!-- Dados dos clientes serão inseridos aqui via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Sucesso -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cliente Cadastrado</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 3rem; color: #28a745; margin-bottom: 15px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p>Cliente cadastrado com sucesso!</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeSuccessModal">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Confirmar Cancelamento -->
+    <div class="modal" id="cancelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cancelar Cadastro</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja cancelar o cadastro? Os dados não preenchidos serão perdidos.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="backToForm">Voltar</button>
+                <button class="btn btn-danger" id="confirmCancel">Sim, cancelar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const clientForm = document.getElementById('clientForm');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const tipoDocumentoSelect = document.getElementById('tipo_documento');
+            const documentoInput = document.getElementById('documento');
+            const servicoSelect = document.getElementById('servico');
+            const valorInput = document.getElementById('valor');
+            const successModal = document.getElementById('successModal');
+            const closeSuccessModal = document.getElementById('closeSuccessModal');
+            const cancelModal = document.getElementById('cancelModal');
+            const backToForm = document.getElementById('backToForm');
+            const confirmCancel = document.getElementById('confirmCancel');
+            const overlay = document.querySelector('.overlay');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            
+            // Tabela de clientes
+            const emptyState = document.getElementById('emptyState');
+            const clientesTable = document.getElementById('clientesTable');
+            const clientesTableBody = document.getElementById('clientesTableBody');
+            
+            // Verificar e carregar clientes do localStorage
+            function loadClients() {
+                const savedClients = localStorage.getItem('clients');
+                if (savedClients) {
+                    const clients = JSON.parse(savedClients);
+                    
+                    if (clients.length > 0) {
+                        // Mostrar tabela e ocultar estado vazio
+                        emptyState.style.display = 'none';
+                        clientesTable.style.display = 'block';
+                        
+                        // Limpar a tabela
+                        clientesTableBody.innerHTML = '';
+                        
+                        // Adicionar apenas os 5 clientes mais recentes
+                        const recentClients = clients.slice(0, 5);
+                        
+                        recentClients.forEach(client => {
+                            const row = document.createElement('tr');
+                            
+                            // Formatar valores para exibição
+                            const servicoNome = getServicoNome(client.servico);
+                            const statusBadge = getStatusBadge(client.situacao);
+                            const valorFormatado = formatCurrency(client.valor);
+                            
+                            row.innerHTML = `
+                                <td>${client.nome}</td>
+                                <td>${formatDocument(client.documento, client.tipo_documento)}</td>
+                                <td>${servicoNome}</td>
+                                <td>${client.data}</td>
+                                <td>${statusBadge}</td>
+                                <td>${valorFormatado}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" title="Visualizar" data-id="${client.id}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-action btn-edit" title="Editar" data-id="${client.id}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            `;
+                            
+                            clientesTableBody.appendChild(row);
+                        });
+                    } else {
+                        // Mostrar estado vazio se não houver clientes
+                        emptyState.style.display = 'block';
+                        clientesTable.style.display = 'none';
+                    }
+                } else {
+                    // Mostrar estado vazio se não houver dados no localStorage
+                    emptyState.style.display = 'block';
+                    clientesTable.style.display = 'none';
+                }
+            }
+            
+            // Formatar documento (CPF/CNPJ)
+            function formatDocument(doc, type) {
+                if (!doc) return '';
+                
+                if (type === 'cpf') {
+                    return doc.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                } else if (type === 'cnpj') {
+                    return doc.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+                }
+                
+                return doc;
+            }
+            
+            // Obter nome do serviço
+            function getServicoNome(servicoKey) {
+                const servicos = {
+                    'consulta_completa': 'Consulta Completa',
+                    'limpar_nome': 'Apenas Limpar Nome',
+                    'rating_bancario': 'Apenas Rating Bancário',
+                    'combo_limpar_score': 'Combo (Limpar nome e Aumento de Score)',
+                    'combo_rating_limpar': 'Combo (Rating e Limpa Nome)',
+                    'combo_rating_bacen': 'Combo (Rating Bancário e Bacen)',
+                    'combo_completo': 'Combo (Limpar nome, Rating Bancário e Bacen)'
+                };
+                
+                return servicos[servicoKey] || servicoKey;
+            }
+            
+            // Obter badge de status
+            function getStatusBadge(situacaoKey) {
+                const status = {
+                    'aguardando_pagamento': '<span class="status-badge status-aguardando">Aguardando Pagamento</span>',
+                    'refazer': '<span class="status-badge status-refazer">Refazer</span>',
+                    'negociando': '<span class="status-badge status-protocolado">Negociando</span>'
+                };
+                
+                return status[situacaoKey] || situacaoKey;
+            }
+            
+            // Formatar valor em moeda
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('pt-BR', { 
+                    style: 'currency', 
+                    currency: 'BRL' 
+                }).format(value);
+            }
+            
+            // Tabela de preços dos serviços
+            const precoServicos = {
+                'consulta_completa': 350,
+                'limpar_nome': 300,
+                'rating_bancario': 450,
+                'combo_limpar_score': 650,
+                'combo_rating_limpar': 650,
+                'combo_rating_bacen': 850,
+                'combo_completo': 950
+            };
+            
+            // Atualizar valor baseado no serviço selecionado
+            if (servicoSelect) {
+                servicoSelect.addEventListener('change', function() {
+                    const servicoSelecionado = this.value;
+                    const valor = precoServicos[servicoSelecionado] || 0;
+                    
+                    valorInput.value = formatCurrency(valor);
+                });
+            }
+            
+            // Máscara para CPF/CNPJ
+            if (documentoInput && tipoDocumentoSelect) {
+                function applyDocumentMask() {
+                    const tipoDocumento = tipoDocumentoSelect.value;
+                    let value = documentoInput.value.replace(/\D/g, '');
+                    
+                    if (tipoDocumento === 'cpf') {
+                        // Máscara para CPF: 000.000.000-00
+                        documentoInput.maxLength = 14;
+                        
+                        if (value.length <= 3) {
+                            documentoInput.value = value;
+                        } else if (value.length <= 6) {
+                            documentoInput.value = `${value.slice(0, 3)}.${value.slice(3)}`;
+                        } else if (value.length <= 9) {
+                            documentoInput.value = `${value.slice(0, 3)}.${value.slice(3, 6)}.${value.slice(6)}`;
+                        } else {
+                            documentoInput.value = `${value.slice(0, 3)}.${value.slice(3, 6)}.${value.slice(6, 9)}-${value.slice(9, 11)}`;
+                        }
+                    } else if (tipoDocumento === 'cnpj') {
+                        // Máscara para CNPJ: 00.000.000/0000-00
+                        documentoInput.maxLength = 18;
+                        
+                        if (value.length <= 2) {
+                            documentoInput.value = value;
+                        } else if (value.length <= 5) {
+                            documentoInput.value = `${value.slice(0, 2)}.${value.slice(2)}`;
+                        } else if (value.length <= 8) {
+                            documentoInput.value = `${value.slice(0, 2)}.${value.slice(2, 5)}.${value.slice(5)}`;
+                        } else if (value.length <= 12) {
+                            documentoInput.value = `${value.slice(0, 2)}.${value.slice(2, 5)}.${value.slice(5, 8)}/${value.slice(8)}`;
+                        } else {
+                            documentoInput.value = `${value.slice(0, 2)}.${value.slice(2, 5)}.${value.slice(5, 8)}/${value.slice(8, 12)}-${value.slice(12, 14)}`;
+                        }
+                    }
+                }
+                
+                documentoInput.addEventListener('input', applyDocumentMask);
+                tipoDocumentoSelect.addEventListener('change', function() {
+                    documentoInput.value = '';
+                });
+            }
+            
+            // Máscara para telefone
+            const telefoneInput = document.getElementById('telefone');
+            
+            if (telefoneInput) {
+                telefoneInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    if (value.length > 0) {
+                        // Formato: (00) 00000-0000
+                        if (value.length <= 2) {
+                            value = `(${value}`;
+                        } else if (value.length <= 7) {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+                        } else if (value.length <= 11) {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
+                        } else {
+                            value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7, 11)}`;
+                        }
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+            
+            // Funções para manipular modais
+            function openModal(modal) {
+                modal.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            function closeModal(modal) {
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            function closeAllModals() {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                overlay.classList.remove('active');
+            }
+            
+            // Evento para botão de cancelar
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Verificar se há dados no formulário
+                    const formFilled = Array.from(clientForm.elements).some(element => {
+                        return element.tagName.toLowerCase() !== 'button' && element.value.trim() !== '';
+                    });
+                    
+                    if (formFilled) {
+                        openModal(cancelModal);
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                });
+            }
+            
+            // Eventos para o modal de cancelamento
+            if (backToForm) {
+                backToForm.addEventListener('click', function() {
+                    closeModal(cancelModal);
+                });
+            }
+            
+            if (confirmCancel) {
+                confirmCancel.addEventListener('click', function() {
+                    closeModal(cancelModal);
+                    clientForm.reset();
+                    window.location.href = 'dashboard.html';
+                });
+            }
+            
+            // Formulário de cadastro
+            if (clientForm) {
+                clientForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Obter dados do formulário
+                    const formData = new FormData(clientForm);
+                    const clientData = Object.fromEntries(formData.entries());
+                    
+                    // Limpar valores formatados
+                    clientData.documento = clientData.documento.replace(/\D/g, '');
+                    clientData.valor = parseFloat(clientData.valor.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+                    
+                    // Adicionar data de cadastro
+                    const now = new Date();
+                    clientData.data = now.toLocaleDateString('pt-BR');
+                    clientData.timestamp = now.getTime();
+                    
+                    // Gerar ID único
+                    clientData.id = 'client_' + now.getTime();
+                    
+                    // Salvar no localStorage
+                    const savedClients = localStorage.getItem('clients');
+                    const clients = savedClients ? JSON.parse(savedClients) : [];
+                    
+                    clients.unshift(clientData); // Adicionar no início para mostrar os mais recentes primeiro
+                    localStorage.setItem('clients', JSON.stringify(clients));
+                    
+                    // Atualizar a tabela
+                    loadClients();
+                    
+                    // Mostrar modal de sucesso
+                    openModal(successModal);
+                    
+                    // Resetar formulário
+                    clientForm.reset();
+                });
+            }
+            
+            // Fechar modal de sucesso
+            if (closeSuccessModal) {
+                closeSuccessModal.addEventListener('click', function() {
+                    closeModal(successModal);
+                });
+            }
+            
+            // Fechar modais com botão X
+            if (closeModalButtons.length > 0) {
+                closeModalButtons.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        closeAllModals();
+                    });
+                });
+            }
+            
+            // Fechar modais clicando no overlay
+            if (overlay) {
+                overlay.addEventListener('click', closeAllModals);
+            }
+            
+            // Dropdown menus
+            const dropdownMenus = document.querySelectorAll('.menu-dropdown');
+            
+            if (dropdownMenus.length > 0) {
+                dropdownMenus.forEach(menu => {
+                    menu.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const submenu = this.nextElementSibling;
+                        submenu.classList.toggle('active');
+                        const icon = this.querySelector('.dropdown-icon');
+                        icon.classList.toggle('rotate');
+                    });
+                });
+            }
+            
+            // Carregar clientes ao iniciar a página
+            loadClients();
+            
+            // Adicionar submenu estilização
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    .submenu {
+                        display: none;
+                        padding-left: 35px;
+                        margin-top: 5px;
+                    }
+                    
+                    .submenu.active {
+                        display: block;
+                    }
+                    
+                    .dropdown-icon {
+                        transition: transform 0.3s ease;
+                        margin-left: auto;
+                    }
+                    
+                    .dropdown-icon.rotate {
+                        transform: rotate(180deg);
+                    }
+                    
+                    .status-badge.status-aguardando {
+                        background-color: #fff8e1;
+                        color: #f57c00;
+                    }
+                    
+                    .status-badge.status-refazer {
+                        background-color: #ffebee;
+                        color: #c62828;
+                    }
+                    
+                    .status-badge.status-protocolado {
+                        background-color: #e3f2fd;
+                        color: #1976d2;
+                    }
+                    
+                    .modal {
+                        display: none;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        z-index: 1000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity 0.3s ease;
+                    }
+                    
+                    .modal.active {
+                        opacity: 1;
+                        pointer-events: auto;
+                    }
+                    
+                    .modal-content {
+                        background-color: white;
+                        border-radius: var(--border-radius);
+                        box-shadow: var(--box-shadow);
+                        width: 100%;
+                        max-width: 500px;
+                        z-index: 1001;
+                    }
+                    
+                    .modal-header {
+                        padding: 15px 20px;
+                        border-bottom: 1px solid var(--border-color);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    
+                    .modal-header h3 {
+                        margin: 0;
+                        font-size: 1.2rem;
+                        color: var(--primary-color);
+                    }
+                    
+                    .close-modal {
+                        background: none;
+                        border: none;
+                        font-size: 1.2rem;
+                        color: var(--text-light);
+                        cursor: pointer;
+                    }
+                    
+                    .modal-body {
+                        padding: 20px;
+                    }
+                    
+                    .modal-footer {
+                        padding: 15px 20px;
+                        border-top: 1px solid var(--border-color);
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 10px;
+                    }
+                    
+                    .overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        z-index: 999;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity 0.3s ease;
+                    }
+                    
+                    .overlay.active {
+                        opacity: 1;
+                        pointer-events: auto;
+                    }
+                </style>
+            `);
+        });
+    </script>
+</body>
+</html>

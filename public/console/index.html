@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li class="active">
+                    <a href="index.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pedidos de Revendedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listas.html">
+                        <i class="fas fa-list-alt"></i>
+                        <span>Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="valores.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Valores dos Serviços</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Dashboard</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquisar...">
+                    <button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Administrador</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Date Filter -->
+        <div class="date-filter">
+            <div class="welcome-message">
+                <h3>Olá, Administrador!</h3>
+                <p>Bem-vindo ao seu dashboard</p>
+            </div>
+            <div class="filter-controls">
+                <div class="date-inputs">
+                    <div class="input-group">
+                        <label for="start-date">Data Inicial</label>
+                        <input type="date" id="start-date" name="start-date">
+                    </div>
+                    <div class="input-group">
+                        <label for="end-date">Data Final</label>
+                        <input type="date" id="end-date" name="end-date">
+                    </div>
+                </div>
+                <button class="btn btn-filter">
+                    <i class="fas fa-filter"></i>
+                    Filtrar
+                </button>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Total Pago</h3>
+                        <h2>R$ 145.850,00</h2>
+                        <p>+12% em relação ao período anterior</p>
+                    </div>
+                    <div class="stat-card-icon green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Total Pendente</h3>
+                        <h2>R$ 38.420,00</h2>
+                        <p>-5% em relação ao período anterior</p>
+                    </div>
+                    <div class="stat-card-icon yellow">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Total Geral</h3>
+                        <h2>R$ 184.270,00</h2>
+                        <p>+8% em relação ao período anterior</p>
+                    </div>
+                    <div class="stat-card-icon blue">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <div class="stat-card-info">
+                        <h3>Clientes Ativos</h3>
+                        <h2>487</h2>
+                        <p>+24 novos clientes este mês</p>
+                    </div>
+                    <div class="stat-card-icon purple">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="stat-card-footer">
+                    <span>Atualizado em 09/04/2025</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <!-- Revenue Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Receita Mensal</h3>
+                    <div class="chart-actions">
+                        <button class="btn-icon" data-action="download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn-icon" data-action="expand">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <div class="chart-period">
+                            <select id="revenue-period">
+                                <option value="month">Últimos 30 dias</option>
+                                <option value="quarter">Últimos 3 meses</option>
+                                <option value="year">Último ano</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Services Distribution Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Distribuição de Serviços</h3>
+                    <div class="chart-actions">
+                        <button class="btn-icon" data-action="download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn-icon" data-action="expand">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="servicesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- More Charts Section -->
+        <div class="charts-section">
+            <!-- Status Progress Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Progresso por Status</h3>
+                    <div class="chart-actions">
+                        <button class="btn-icon" data-action="download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn-icon" data-action="expand">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Resellers Performance Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Desempenho de Revendedores</h3>
+                    <div class="chart-actions">
+                        <button class="btn-icon" data-action="download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="btn-icon" data-action="expand">
+                            <i class="fas fa-expand-alt"></i>
+                        </button>
+                        <div class="chart-period">
+                            <select id="resellers-period">
+                                <option value="month">Este mês</option>
+                                <option value="quarter">Este trimestre</option>
+                                <option value="year">Este ano</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-body">
+                    <canvas id="resellersChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <div class="section-header">
+                <h3>Atividades Recentes</h3>
+                <a href="#" class="btn-text">Ver Todas</a>
+            </div>
+            
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon blue">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-info">
+                            <h4>Novo Revendedor Cadastrado</h4>
+                            <p>Carlos Silva se cadastrou como revendedor</p>
+                        </div>
+                        <div class="activity-time">
+                            <span>Hoje, 14:32</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-info">
+                            <h4>Pagamento Confirmado</h4>
+                            <p>Pagamento de R$ 3.450,00 confirmado para o pedido #12345</p>
+                        </div>
+                        <div class="activity-time">
+                            <span>Hoje, 11:15</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon yellow">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-info">
+                            <h4>Nova Lista Criada</h4>
+                            <p>Lista #78 criada com 15 clientes para processamento</p>
+                        </div>
+                        <div class="activity-time">
+                            <span>Ontem, 16:45</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon purple">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-info">
+                            <h4>Atualização de Status</h4>
+                            <p>5 processos atualizados para "Decisão Favorável"</p>
+                        </div>
+                        <div class="activity-time">
+                            <span>Ontem, 10:20</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon red">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-info">
+                            <h4>Alerta de Sistema</h4>
+                            <p>Backup automático concluído com sucesso</p>
+                        </div>
+                        <div class="activity-time">
+                            <span>08/04/2025, 02:00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="../assets/js/dashboard.js"></script>
+</body>
+</html>

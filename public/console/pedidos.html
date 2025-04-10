@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos de Revendedores | LW Soluções Financeiras</title>
+    <link rel="stylesheet" href="../assets/css/console.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para página de pedidos */
+        .pedidos-container {
+            margin: 20px 30px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .pedidos-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .pedidos-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+        
+        .pedidos-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .pedidos-filter {
+            background-color: var(--light-bg);
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .filter-item label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .filter-item select,
+        .filter-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .data-table td {
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-aguardando {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .status-pago {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-protocolado {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .status-baixado {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .status-refazer {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .btn-view {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .btn-view:hover {
+            background-color: #bbdefb;
+        }
+        
+        .btn-edit {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+        
+        .btn-edit:hover {
+            background-color: #ffecb3;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            background-color: var(--light-bg);
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .pagination-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .pagination-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background-color: white;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+        
+        .page-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .page-btn:hover:not(.active) {
+            background-color: var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <h1><span class="highlight-gold">LW</span></h1>
+                <span class="logo-text">Soluções</span>
+            </div>
+            <button class="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="pedidos.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pedidos de Revendedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="listas.html">
+                        <i class="fas fa-list-alt"></i>
+                        <span>Listas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="valores.html">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Valores dos Serviços</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Gerenciar Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="relatorios.html">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="configuracoes.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <a href="#" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <h2>Pedidos de Revendedores</h2>
+            </div>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <input type="text" placeholder="Pesquisar pedidos...">
+                    <button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-btn">
+                        <div class="user-avatar">
+                            <img src="../assets/img/avatar.svg" alt="Usuário">
+                        </div>
+                        <span class="user-name">Administrador</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>Meu Perfil</span>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-cog"></i>
+                            <span>Configurações</span>
+                        </a>
+                        <a href="#" id="logout-dropdown">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sair</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Pedidos Container -->
+        <div class="pedidos-container">
+            <!-- Pedidos Header -->
+            <div class="pedidos-header">
+                <h2>Lista de Pedidos</h2>
+                <div class="pedidos-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-file-export"></i> Exportar
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Novo Pedido
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="pedidos-filter">
+                <div class="filter-item">
+                    <label for="filter-revendedor">Revendedor</label>
+                    <select id="filter-revendedor">
+                        <option value="">Todos os Revendedores</option>
+                        <option value="1">Carlos Silva</option>
+                        <option value="2">Maria Santos</option>
+                        <option value="3">João Oliveira</option>
+                        <option value="4">Ana Souza</option>
+                        <option value="5">Pedro Lima</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label for="filter-servico">Serviço</label>
+                    <select id="filter-servico">
+                        <option value="">Todos os Serviços</option>
+                        <option value="consulta">Consulta Completa</option>
+                        <option value="limparNome">Apenas Limpar Nome</option>
+                        <option value="rating">Apenas Rating Bancário</option>
+                        <option value="combo1">Combo (Limpar nome e Aumento de Score)</option>
+                        <option value="combo2">Combo (Rating e Limpa Nome)</option>
+                        <option value="combo3">Combo (Rating Bancário e Bacen)</option>
+                        <option value="comboCompleto">Combo (Limpar nome, Rating Bancário e Bacen)</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label for="filter-status">Status</label>
+                    <select id="filter-status">
+                        <option value="">Todos os Status</option>
+                        <option value="aguardando">Aguardando Pagamento</option>
+                        <option value="pago">Pago</option>
+                        <option value="protocolado">Processo Protocolado</option>
+                        <option value="baixado">Processo Baixado</option>
+                        <option value="refazer">Refazer</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label for="filter-data">Data</label>
+                    <input type="date" id="filter-data">
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-broom"></i> Limpar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tabela de Pedidos -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Revendedor</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Data Criação</th>
+                            <th>Serviço Contratado</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#12345</td>
+                            <td>Carlos Silva</td>
+                            <td>carlos.silva@email.com</td>
+                            <td>(11) 98765-4321</td>
+                            <td>08/04/2025</td>
+                            <td>Consulta Completa</td>
+                            <td><span class="status-badge status-pago">Pago</span></td>
+                            <td>R$ 350,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#12346</td>
+                            <td>Maria Santos</td>
+                            <td>maria.santos@email.com</td>
+                            <td>(21) 98765-4321</td>
+                            <td>07/04/2025</td>
+                            <td>Combo (Limpar nome e Aumento de Score)</td>
+                            <td><span class="status-badge status-aguardando">Aguardando Pagamento</span></td>
+                            <td>R$ 750,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#12347</td>
+                            <td>João Oliveira</td>
+                            <td>joao.oliveira@email.com</td>
+                            <td>(31) 98765-4321</td>
+                            <td>06/04/2025</td>
+                            <td>Apenas Rating Bancário</td>
+                            <td><span class="status-badge status-protocolado">Processo Protocolado</span></td>
+                            <td>R$ 450,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#12348</td>
+                            <td>Ana Souza</td>
+                            <td>ana.souza@email.com</td>
+                            <td>(41) 98765-4321</td>
+                            <td>05/04/2025</td>
+                            <td>Combo (Rating Bancário e Bacen)</td>
+                            <td><span class="status-badge status-baixado">Processo Baixado</span></td>
+                            <td>R$ 850,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#12349</td>
+                            <td>Pedro Lima</td>
+                            <td>pedro.lima@email.com</td>
+                            <td>(51) 98765-4321</td>
+                            <td>04/04/2025</td>
+                            <td>Apenas Limpar Nome</td>
+                            <td><span class="status-badge status-refazer">Refazer</span></td>
+                            <td>R$ 300,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#12350</td>
+                            <td>Carlos Silva</td>
+                            <td>carlos.silva@email.com</td>
+                            <td>(11) 98765-4321</td>
+                            <td>03/04/2025</td>
+                            <td>Combo (Limpar nome, Rating Bancário e Bacen)</td>
+                            <td><span class="status-badge status-pago">Pago</span></td>
+                            <td>R$ 950,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#12351</td>
+                            <td>Maria Santos</td>
+                            <td>maria.santos@email.com</td>
+                            <td>(21) 98765-4321</td>
+                            <td>02/04/2025</td>
+                            <td>Combo (Rating e Limpa Nome)</td>
+                            <td><span class="status-badge status-protocolado">Processo Protocolado</span></td>
+                            <td>R$ 650,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#12352</td>
+                            <td>João Oliveira</td>
+                            <td>joao.oliveira@email.com</td>
+                            <td>(31) 98765-4321</td>
+                            <td>01/04/2025</td>
+                            <td>Consulta Completa</td>
+                            <td><span class="status-badge status-aguardando">Aguardando Pagamento</span></td>
+                            <td>R$ 350,00</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-action btn-edit" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Paginação -->
+            <div class="pagination">
+                <div class="pagination-info">
+                    Mostrando 1-8 de 48 resultados
+                </div>
+                <div class="pagination-buttons">
+                    <button class="page-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">4</button>
+                    <button class="page-btn">5</button>
+                    <button class="page-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 LW Soluções Financeiras. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    
+    <!-- Modal para Detalhes do Pedido -->
+    <div class="modal" id="pedidoDetailModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Detalhes do Pedido #12345</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Aqui irá o conteúdo do modal de detalhes -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeDetailModal">Fechar</button>
+                <button class="btn btn-primary" id="editPedido">Editar Pedido</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Logout Confirmation -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelLogout">Cancelar</button>
+                <button class="btn btn-danger" id="confirmLogout">Sair</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay"></div>
+    
+    <!-- Scripts -->
+    <script src="../assets/js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Botões de visualizar pedido
+            const viewButtons = document.querySelectorAll('.btn-view');
+            const pedidoDetailModal = document.getElementById('pedidoDetailModal');
+            const closeDetailModal = document.getElementById('closeDetailModal');
+            const overlay = document.querySelector('.overlay');
+            
+            // Função para abrir modal de detalhes
+            function openDetailModal() {
+                pedidoDetailModal.classList.add('active');
+                overlay.classList.add('active');
+            }
+            
+            // Função para fechar modal de detalhes
+            function closeModal() {
+                pedidoDetailModal.classList.remove('active');
+                overlay.classList.remove('active');
+            }
+            
+            // Adicionar eventos aos botões
+            if (viewButtons.length > 0) {
+                viewButtons.forEach(btn => {
+                    btn.addEventListener('click', openDetailModal);
+                });
+            }
+            
+            if (closeDetailModal) {
+                closeDetailModal.addEventListener('click', closeModal);
+            }
+            
+            // Fechar modal ao clicar no overlay
+            if (overlay) {
+                overlay.addEventListener('click', closeModal);
+            }
+        });
+    </script>
+</body>
+</html>
